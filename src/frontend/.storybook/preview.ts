@@ -1,5 +1,8 @@
 import type { Preview } from '@storybook/vue3-vite'
 import  'bootstrap/dist/css/bootstrap.min.css';
+import '../src/assets/main.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { VueSelect } from "vue-select";
 
 
 const preview: Preview = {

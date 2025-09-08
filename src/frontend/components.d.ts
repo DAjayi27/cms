@@ -8,7 +8,14 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    CourseCard: typeof import('./src/components/CourseCard.vue')['default']
+    AssementCard: typeof import('./src/components/AssementCard.vue')['default']
+    AssessmentCard: typeof import('./src/components/cards/AssessmentCard.vue')['default']
+    AssessmentCardCard: typeof import('./src/components/AssessmentCardCard.vue')['default']
+    BButton: typeof import('bootstrap-vue-next/components/BButton')['BButton']
+    BCard: typeof import('bootstrap-vue-next/components/BCard')['BCard']
+    BCardText: typeof import('bootstrap-vue-next/components/BCard')['BCardText']
+    CalendarWidget: typeof import('./src/components/dashboard/CalendarWidget.vue')['default']
+    CourseCard: typeof import('./src/components/cards/CourseCard.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
@@ -18,5 +25,11 @@ declare module 'vue' {
     NavBar: typeof import('./src/components/NavBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StatsCard: typeof import('./src/components/dashboard/StatsCard.vue')['default']
+    UpcomingAssements: typeof import('./src/components/UpcomingAssements.vue')['default']
+    UpcomingAssessments: typeof import('./src/components/UpcomingAssessments.vue')['default']
+  }
+  export interface GlobalDirectives {
+    vBColorMode: typeof import('bootstrap-vue-next/directives/BColorMode')['vBColorMode']
   }
 }

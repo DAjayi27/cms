@@ -11,12 +11,9 @@ import { RouterLink, RouterView } from 'vue-router'
     <BNavbarToggle target="nav-collapse" />
     <BCollapse id="nav-collapse" is-nav>
       <BNavbarNav>
-        <RouterLink to="/about"><BNavItem >Main</BNavItem></RouterLink>
-        <BNavItem
-            href="#"
-            disabled
-        >Disabled</BNavItem
-        >
+        <router-link :to="{name:'dashboard'}" class="nav-link">Dashboard</router-link>
+        <router-link :to="{name:'about'}" class="nav-link">About</router-link>
+
       </BNavbarNav>
       <!-- Right aligned nav items -->
       <BNavbarNav class="ms-auto mb-2 mb-lg-0">
