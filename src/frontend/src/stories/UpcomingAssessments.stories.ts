@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 import { fn } from 'storybook/test';
 import AssessmentCard from "@/components/cards/AssessmentCard.vue";
-import UpcomingAssessments from "@/components/UpcomingAssessments.vue";
+import UpcomingAssessments from "@/components/dashboard/UpcomingAssessments.vue";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {

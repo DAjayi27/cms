@@ -21,6 +21,8 @@ import NavBar from "@/components/NavBar.vue";
   min-height: 100vh;
 }
 
+main { background: #f6f7fb; }
+
 
 
 </style>

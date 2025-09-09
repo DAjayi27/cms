@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import CourseCard from '@/components/cards/CourseCard.vue'
 import StatsCard from "@/components/dashboard/StatsCard.vue";
 import CalendarWidget from "@/components/dashboard/CalendarWidget.vue";
-import UpcomingAssessments from "@/components/UpcomingAssessments.vue";
+import UpcomingAssessments from "@/components/dashboard/UpcomingAssessments.vue";
 
 // Keep data minimal so everything fits without scrolling
 const userName = 'Daniel'
@@ -66,7 +66,7 @@ function onAddCourse() {}
         <div class="card-body py-3 d-flex flex-column">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h2 class="h6 mb-0">Courses</h2>
-            <a href="#" class="text-decoration-none small">View all</a>
+            <router-link :to="{name:'courses'}" class="text-decoration-none small">View all</router-link>
           </div>
           <div class="row g-1 course-card-compact" style="flex: 1 1 auto;">
             <div class="col" v-for="c in coursesTop" :key="c.id">
@@ -87,7 +87,7 @@ function onAddCourse() {}
 </template>
 
 <style scoped>
-.dashboard { background: #f6f7fb; }
+
 
 
 </style>

@@ -12,6 +12,8 @@ import { RouterLink, RouterView } from 'vue-router'
     <BCollapse id="nav-collapse" is-nav>
       <BNavbarNav>
         <router-link :to="{name:'dashboard'}" class="nav-link">Dashboard</router-link>
+        <router-link :to="{name:'tasks'}" class="nav-link">Tasks</router-link>
+        <router-link :to="{name:'courses'}" class="nav-link">Courses</router-link>
         <router-link :to="{name:'about'}" class="nav-link">About</router-link>
 
       </BNavbarNav>
