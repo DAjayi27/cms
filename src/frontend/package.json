@@ -16,6 +16,11 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.0.1",
+    "@fortawesome/free-brands-svg-icons": "^7.0.1",
+    "@fortawesome/free-regular-svg-icons": "^7.0.1",
+    "@fortawesome/free-solid-svg-icons": "^7.0.1",
+    "@fortawesome/vue-fontawesome": "^3.1.2",
     "bootstrap": "^5.3.8",
     "bootstrap-vue-next": "^0.30.5",
     "pinia": "^3.0.3",
@@ -26,7 +31,7 @@
     "@storybook/vue3-vite": "^9.1.4",
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^22.16.5",
-    "@types/vue-select": "^3.16.8",
+    "@types/vue-select": "^2.5.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vitejs/plugin-vue-jsx": "^5.0.1",
     "@vue/tsconfig": "^0.7.0",
@@ -39,7 +44,6 @@
     "vite": "^7.0.6",
     "vite-plugin-vue-devtools": "^8.0.0",
     "vue-router": "^4.5.1",
-    "vue-select": "^4.0.0-beta.6",
     "vue-tsc": "^3.0.4"
   }
 }
