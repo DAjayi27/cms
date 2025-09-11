@@ -1,15 +1,18 @@
 <script setup lang="ts">
+import {toTitle} from "@/utils/functions.ts";
+import {CourseStatusVariant, PriorityVariant, TaskStatusVariant} from "@/utils/utils.ts";
+
 interface Props {
-  status?: string
-  statusVariant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark'
+  status: string
   title: string
+  name:string
   term: string
+  year: number
   description?: string
   endedAt?: string
   imgSrc?: string
   // CourseCard.vue props
   priority?: string
-  priorityVariant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -17,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   statusVariant: 'primary',
   priority: '',
   priorityVariant: 'secondary',
-  description: 'hELLO',
+  description: '',
   endedAt: ''
 })
 
@@ -34,23 +37,23 @@ const props = withDefaults(defineProps<Props>(), {
       <span
           v-if="props.status"
           class="badge position-absolute start-0 top-0 m-2"
-          :class="'text-bg-' + props.statusVariant"
+          :class="'text-bg-' + CourseStatusVariant.get(props.status)"
       >
-        {{ props.status }}
+        {{toTitle(props.status)}}
       </span>
     </div>
     <!-- Body -->
     <div class="card-body">
       <!-- Status -->
       <div v-if="props.priority" class="mb-2 d-flex flex-wrap gap-1">
-        <span class="badge" :class="'text-bg-' + props.priorityVariant">{{ props.priority }}</span>
+        <span class="badge" :class="'text-bg-' + PriorityVariant.get(props.priority)">{{ toTitle(props.priority) }}</span>
       </div>
 
       <!-- Title -->
-      <h6 class="card-title mb-1">{{ props.title }}</h6>
+      <h6 class="card-title mb-1">{{`${props.title} - ${props.name} - ${props.year} ${toTitle(props.term)}`}}</h6>
 
       <!-- Term -->
-      <p class="mb-1 text-muted small">{{ props.term }}</p>
+      <p class="mb-1 text-muted small">{{ `${props.year} ${toTitle(props.term)}`}}</p>
 
       <!-- Description -->
       <p v-if="props.description" class="mb-1 small">{{ props.description }}</p>

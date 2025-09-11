@@ -1,19 +1,25 @@
-import type {Priority, Status} from "@/utils/utils.ts";
+import type {CourseStatus, Priority, TaskStatus} from "@/utils/utils.ts";
 
 export interface Course {
-    id: string | number
+    id: number
+    status: CourseStatus
     title: string
-    priority?: 'High' | 'Medium' | 'Low' | string
-    priorityVariant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark'
+    name:string
+    term: string
+    year: number
+    description?: string
+    endedAt?: string
+    imgSrc?: string
+    priority?: Priority
 }
-
 export interface Task {
-    id: string | number
+    id: number
     name: string
-    courseId: string | number
+    courseId: number
     courseName: string,
+    courseTitle:string,
     priority: Priority,
-    status:Status,
+    status:TaskStatus,
     due: string // ISO-like string preferred (e.g., 2025-12-18T22:30)
     modalTarget: string
 }

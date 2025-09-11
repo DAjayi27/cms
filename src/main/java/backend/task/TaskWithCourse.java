@@ -1,8 +1,8 @@
 package backend.task;
 
+import backend.utils.TaskStatus;
 import backend.utils.Term;
 import backend.utils.Priority;
-import backend.utils.Status;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +11,7 @@ public class TaskWithCourse{
     private String name;
     private LocalDateTime due;
     private Priority priority;
-    private Status status;
+    private TaskStatus status;
     private Long courseId;
 
     private String courseTitle;    // from course.title
@@ -27,7 +27,7 @@ public class TaskWithCourse{
     public String getName() { return name; }                public void setName(String name) { this.name = name; }
     public LocalDateTime getDue() { return due; }           public void setDue(LocalDateTime due) { this.due = due; }
     public Priority getPriority() { return priority; }      public void setPriority(Priority priority) { this.priority = priority; }
-    public Status getStatus() { return status; }            public void setStatus(Status status) { this.status = status; }
+    public TaskStatus getStatus() { return status; }            public void setStatus(TaskStatus taskStatus) { this.status = taskStatus; }
     public Long getCourseId() { return courseId; }          public void setCourseId(Long courseId) { this.courseId = courseId; }
 
     public String getCourseTitle() { return courseTitle; }  public void setCourseTitle(String courseTitle) { this.courseTitle = courseTitle; }

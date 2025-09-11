@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, toRef } from 'vue'
-import type { Priority, Status } from '@/utils/utils.ts'
+import type { Priority, TaskStatus } from '@/utils/utils.ts'
 import type { Task } from '@/utils/interfaces.ts'
 
 // Optional prefill values (e.g., when adding from a specific course)
@@ -15,7 +15,7 @@ const form = ref<Task>({
   courseName: '',
   due: '',                        // use "due" to match Tasks.vue dataset
   priority: 'medium' as Priority,
-  status: 'not-started' as Status,
+  taskStatus: 'not_started' as TaskStatus,
   modalTarget: '#editTaskModal',
 } as unknown as Task)
 
@@ -74,10 +74,10 @@ function onSave() {
 
               <!-- Status -->
               <div class="col-6 col-md-3">
-                <label for="add-task-status" class="form-label">Status</label>
-                <select id="add-task-status" v-model="form.status" class="form-select">
-                  <option value="not-started">Not Started</option>
-                  <option value="in-progress">In Progress</option>
+                <label for="add-task-taskStatus" class="form-label">Status</label>
+                <select id="add-task-taskStatus" v-model="form.taskStatus" class="form-select">
+                  <option value="not_started">Not Started</option>
+                  <option value="in_progress">In Progress</option>
                   <option value="completed">Completed</option>
                 </select>
               </div>

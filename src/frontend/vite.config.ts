@@ -21,11 +21,13 @@ export default defineConfig({
   },
   server: {
     port: 8000,
-    proxy : {
+    proxy: {
       '/api': {
-        target: 'http://jsonplaceholder.typicode.com',
+        target: 'http://localhost:8100', // your Spring Boot port
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        // If your backend already serves routes with the /api prefix, keep rewrite commented.
+        // If your backend serves at /tasks (no /api), uncomment the rewrite:
+        // rewrite: path => path.replace(/^\/api/, '')
       }
     }
   }

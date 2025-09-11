@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS course (
   term     TEXT,                      -- enum name via converter
   year     INTEGER NOT NULL,          -- store as int
 
-  CHECK (priority IS NULL OR priority IN ('HIGH','MEDIUM','LOW')),
-  CHECK (term IS NULL OR term IN ('FALL','WINTER','SPRING','SUMMER')),
+  CHECK (priority IS NULL OR priority IN ('high','medium','low')),
+  CHECK (term IS NULL OR term IN ('fall','winter','spring','summer')),
   CHECK (year BETWEEN 1900 AND 3000)
 );
 
@@ -20,12 +20,12 @@ CREATE TABLE IF NOT EXISTS task (
     name       TEXT NOT NULL,
     due        TEXT,                        -- ISO 'yyyy-MM-dd''T''HH:mm'
     priority   TEXT,
-    status     TEXT,
+    taskStatus     TEXT,
     course_id  INTEGER,
 
     -- Enforce enum-like values written by your converters
-    CONSTRAINT priority_constraint CHECK (priority IS NULL OR priority IN ('HIGH','MEDIUM','LOW')),
-    CONSTRAINT status_constraint CHECK (status   IS NULL OR status   IN ('NOT_STARTED','IN_PROGRESS','COMPLETED')),
+    CONSTRAINT priority_constraint CHECK (priority IS NULL OR priority IN ('high','medium','low')),
+    CONSTRAINT status_constraint CHECK (taskStatus   IS NULL OR taskStatus   IN ('not_started','in_progress','completed')),
 
     FOREIGN KEY (course_id)
     REFERENCES course(id)

@@ -1,9 +1,9 @@
 package backend.config;
 
 
+import backend.utils.TaskStatus;
 import backend.utils.Term;
 import backend.utils.Priority;
-import backend.utils.Status;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
@@ -36,22 +36,22 @@ final class Iso {
 
 @ReadingConverter
  class PriorityReadConverter implements Converter<String, Priority> {
-    @Override public Priority convert(String source) { return (source == null) ? null : Priority.valueOf(source.toLowerCase()); }
+    @Override public Priority convert(String source) { return (source == null) ? null : Priority.valueOf(source); }
 }
 
 /* ----- Status enum <-> TEXT (UI hyphens supported) ----- */
 @WritingConverter
- class StatusWriteConverter implements Converter<Status, String> {
-    @Override public String convert(Status source) { return source == null ? null : source.name(); }
+ class StatusWriteConverter implements Converter<TaskStatus, String> {
+    @Override public String convert(TaskStatus source) { return source == null ? null : source.name(); }
 }
 
 @ReadingConverter
- class StatusReadConverter implements Converter<String, Status> {
-    @Override public Status convert(String source) {
+ class StatusReadConverter implements Converter<String, TaskStatus> {
+    @Override public TaskStatus convert(String source) {
         if (source == null) return null;
         // accept either DB-friendly "in_progress" or UI "in-progress"
         String normalized = source.contains("-") ? source.replace('-', '_') : source;
-        return Status.valueOf(normalized.toLowerCase());
+        return TaskStatus.valueOf(normalized);
     }
 }
 
@@ -66,7 +66,7 @@ final class Iso {
 @ReadingConverter
  class TermReadConverter implements Converter<String, Term> {
     @Override public Term convert(String source) {
-        return (source == null || source.isBlank()) ? null : Term.valueOf(source.trim().toUpperCase());
+        return (source == null || source.isBlank()) ? null : Term.valueOf(source.trim());
     }
 }
 

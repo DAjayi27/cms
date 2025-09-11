@@ -2,7 +2,7 @@
   {
     "id": 1,
     "name": "Assignment 1: HTTP Forms",
-    "status": "not-started",
+    "status": "not_started",
     "courseId": "csci2170",
     "courseName": "CSCI2170 - Server-Side Scripting",
     "due": "2025-12-18T22:30",
@@ -20,7 +20,7 @@
   {
     "id": 3,
     "name": "Quiz 2: Regular Languages",
-    "status": "in-progress",
+    "status": "in_progress",
     "courseId": "csci2115",
     "courseName": "CSCI2115 - Theory of Computation",
     "due": "2025-12-22T10:00",
@@ -29,7 +29,7 @@
   {
     "id": 4,
     "name": "Project Proposal",
-    "status": "not-started",
+    "status": "not_started",
     "courseId": "csci2170",
     "courseName": "CSCI2170 - Server-Side Scripting",
     "due": "2025-12-19T18:00",
@@ -47,7 +47,7 @@
   {
     "id": 6,
     "name": "Midterm Review Notes",
-    "status": "in-progress",
+    "status": "in_progress",
     "courseId": "csci2122",
     "courseName": "CSCI2122 - Systems Programming",
     "due": "2025-12-21T09:00",

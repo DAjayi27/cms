@@ -5,7 +5,7 @@ import type {Task} from "@/utils/interfaces.ts";
 import {
   type Direction,
   PriorityArray,
-  PriorityRank, StatusArray, StatusRank,
+  PriorityRank, TaskStatusArray, TaskStatusRank,
   type TaskColOptions,
   type TaskColumns
 } from "@/utils/utils.ts";
@@ -15,6 +15,7 @@ import {toTitle} from "../utils/functions.ts";
 import rawTasks from'@/files/tasks.json'
 import EditTaskModal from "@/components/modals/EditTaskModal.vue";
 import AddTaskModal from "@/components/modals/AddTaskModal.vue";
+import {fetchData} from "@/utils/fetch.ts";
 
 
 
@@ -76,8 +77,8 @@ function sortTasksByOption(sortOption: TaskColumns, sortDirection:Direction , ta
         break
 
       case "status":
-        let aStatusRank = StatusRank.get(a.status);
-        let bStatusRank = StatusRank.get(b.status);
+        let aStatusRank = TaskStatusRank.get(a.status);
+        let bStatusRank = TaskStatusRank.get(b.status);
         if (sortDirection === 'asc') {
           return (aStatusRank < bStatusRank) ? -1 : 1;
         } else if (sortDirection === 'desc') {
@@ -114,7 +115,19 @@ const sortDirection = ref<Direction>('asc')
 const filterOption = ref<TaskColumns>('')
 const filterValue = ref<TaskColOptions>('');
 
- const sortedTasks = computed(()=>{
+onBeforeMount(async () => {
+
+  let data = await fetchData('/api/tasks','GET');
+
+  fetched.value = await data.json()
+
+  let test = 22;
+
+  debugger;
+
+})
+
+ const sortedTasks = computed<Task[]>(()=>{
 
    let tempTasks : Task[] = fetched.value; //@TODO (change this when db data gets added)
 
@@ -143,7 +156,7 @@ const filterOptionVals = computed(() => {
     case 'priority':
       return PriorityArray;
     case 'status':
-      return StatusArray;
+      return TaskStatusArray;
     default:
       return [];
   }
@@ -268,6 +281,7 @@ function taskEditHandler(saveData:Task) {
                 :id = "task.id"
                 :name = "task.name"
                 :course-name = "task.courseName"
+                :course-title="task.courseTitle"
                 :course-id = "task.courseId"
                 :due = "task.due"
                 :priority = "task.priority"

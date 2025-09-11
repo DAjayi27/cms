@@ -1,5 +1,6 @@
 package backend.course;
 
+import backend.utils.CourseStatus;
 import backend.utils.Priority;
 import backend.utils.Term;
 import org.springframework.data.annotation.Id;
@@ -25,19 +26,23 @@ public class Course {
     private Priority priority;
 
     @Column("term")
-    private Term term;    // FALL/WINTER/SPRING/SUMMER
+    private Term term;    // fall/WINTER/SPRING/summer
 
     @Column("year")
     private int year;     // e.g., 2025
 
+    @Column("status")
+    private CourseStatus status;
+
     public Course() {}
 
-    public Course(String title, String name, Priority priority, Term term, int year) {
+    public Course(String title, String name, Priority priority, Term term, int year,CourseStatus status) {
         this.title = title;
         this.name = name;
         this.priority = priority;
         this.term = term;
         this.year = year;
+        this.status = status;
     }
 
     // getters/setters
@@ -58,6 +63,14 @@ public class Course {
 
     public int getYear() { return year; }
     public void setYear(int year) { this.year = year; }
+
+    public CourseStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CourseStatus status) {
+        this.status = status;
+    }
 
     @Override public boolean equals(Object o) {
         if (this == o) return true;

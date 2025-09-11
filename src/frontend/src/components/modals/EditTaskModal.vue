@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref, toRef, watch} from 'vue'
-import type { Priority, Status } from '@/utils/utils.ts'
+import type { Priority, TaskStatus } from '@/utils/utils.ts'
 import type {Task} from "@/utils/interfaces.ts";
 
 
@@ -17,7 +17,7 @@ const form = ref<Task>({
   courseName: '',
   date: '',
   priority: 'medium' as Priority,
-  status: 'not-started' as Status,
+  taskStatus: 'not_started' as TaskStatus,
   modalTarget: '#editTaskModal',
 })
 
@@ -82,8 +82,8 @@ function onSave():Task {
               <div class="col-6 col-md-3">
                 <label for="task-status" class="form-label">Status</label>
                 <select id="task-status" v-model="form.status" class="form-select">
-                  <option value="not-started">Not Started</option>
-                  <option value="in-progress">In Progress</option>
+                  <option value="not_started">Not Started</option>
+                  <option value="in_progress">In Progress</option>
                   <option value="completed">Completed</option>
                 </select>
               </div>

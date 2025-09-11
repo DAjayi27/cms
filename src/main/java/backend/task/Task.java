@@ -1,7 +1,7 @@
 package backend.task;
 
 import backend.utils.Priority;
-import backend.utils.Status;
+import backend.utils.TaskStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
@@ -27,17 +27,17 @@ public class Task {
 
     private Priority priority;
 
-    private Status status;
+    private TaskStatus status;
 
     public Task() {}
 
     public Task(String name, Long courseId, LocalDateTime due,
-                Priority priority, Status status) {
+                Priority priority, TaskStatus taskStatus) {
         this.name = name;
         this.courseId = courseId;
         this.due = due;
         this.priority = priority;
-        this.status = status;
+        this.status = taskStatus;
     }
 
     // --- getters/setters ---
@@ -61,6 +61,6 @@ public class Task {
     public Priority getPriority() { return priority; }
     public void setPriority(Priority priority) { this.priority = priority; }
 
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
+    public TaskStatus getStatus() { return status; }
+    public void setStatus(TaskStatus taskStatus) { this.status = taskStatus; }
 }

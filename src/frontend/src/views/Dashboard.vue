@@ -9,9 +9,9 @@ import UpcomingAssessments from "@/components/dashboard/UpcomingAssessments.vue"
 const userName = 'Daniel'
 
 const courses = ref([
-  { id: 'csci2122', status: 'Closed', statusVariant: 'secondary', title: 'CSCI2122 - Systems Programming', term: '2024/2025 Winter', endedAt: 'May 7, 2025', imgSrc: 'https://picsum.photos/seed/sysprog/640/320?grayscale' },
-  { id: 'csci2170', status: 'Active', statusVariant: 'success', title: 'CSCI2170 - Server-Side Scripting', term: '2025 Summer', imgSrc: 'https://picsum.photos/seed/sss/640/320' },
-  { id: 'csci2115', status: 'Active', statusVariant: 'success', title: 'CSCI2115 - Theory of Computation', term: '2025 Summer', imgSrc: 'https://picsum.photos/seed/toc/640/320' },
+  { id: 'csci2122', taskStatus: 'Closed', statusVariant: 'secondary', title: 'CSCI2122 - Systems Programming', term: '2024/2025 Winter', endedAt: 'May 7, 2025', imgSrc: 'https://picsum.photos/seed/sysprog/640/320?grayscale' },
+  { id: 'csci2170', taskStatus: 'Active', statusVariant: 'success', title: 'CSCI2170 - Server-Side Scripting', term: '2025 Summer', imgSrc: 'https://picsum.photos/seed/sss/640/320' },
+  { id: 'csci2115', taskStatus: 'Active', statusVariant: 'success', title: 'CSCI2115 - Theory of Computation', term: '2025 Summer', imgSrc: 'https://picsum.photos/seed/toc/640/320' },
 ])
 
 
@@ -41,7 +41,7 @@ function onAddCourse() {}
       <!-- Stats (compact) -->
       <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
         <div class="col">
-          <stats-card class="h-100" title="Active Courses" :value="courses.filter(c => c.status !== 'Closed').length.toString()" />
+          <stats-card class="h-100" title="Active Courses" :value="courses.filter(c => c.taskStatus !== 'Closed').length.toString()" />
         </div>
         <div class="col">
           <stats-card class="h-100" title="Tasks (wk)" value="7" />
@@ -71,8 +71,8 @@ function onAddCourse() {}
           <div class="row g-1 course-card-compact" style="flex: 1 1 auto;">
             <div class="col" v-for="c in coursesTop" :key="c.id">
               <CourseCard
-                  :status="c.status"
-                  :status-variant="c.statusVariant"
+                  :taskStatus="c.taskStatus"
+                  :taskStatus-variant="c.statusVariant"
                   :title="c.title"
                   :term="c.term"
                   :ended-at="c.endedAt"
