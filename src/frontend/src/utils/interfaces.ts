@@ -1,3 +1,4 @@
+import type {Priority, Status} from "@/utils/utils.ts";
 
 export interface Course {
     id: string | number
@@ -11,6 +12,8 @@ export interface Task {
     name: string
     courseId: string | number
     courseName: string,
-    priority: string,
+    priority: Priority,
+    status:Status,
     due: string // ISO-like string preferred (e.g., 2025-12-18T22:30)
+    modalTarget: string
 }

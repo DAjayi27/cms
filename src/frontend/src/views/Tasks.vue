@@ -1,28 +1,24 @@
 <script setup lang="ts">
-import {computed, ref} from 'vue'
+import {computed, onBeforeMount, ref} from 'vue'
 import TableRows from "@/components/table/TableRows.vue";
 import type {Task} from "@/utils/interfaces.ts";
-import {type Direction, PriorityRank, type SortOption} from "@/components/table/utils.ts";
-import * as sea from "node:sea";
+import {
+  type Direction,
+  PriorityArray,
+  PriorityRank, StatusArray, StatusRank,
+  type TaskColOptions,
+  type TaskColumns
+} from "@/utils/utils.ts";
 
-const localTasks = ref<Task[]>([
-  { id: 1, name: 'Assignment 1: HTTP Forms',     courseId: 'csci2170', courseName: 'CSCI2170 - Server-Side Scripting', due: '2025-12-18T22:30', priority:'high'},
-  { id: 2, name: 'Lab 3: Memory & Pointers',     courseId: 'csci2122', courseName: 'CSCI2122 - Systems Programming', due: '2025-12-14T20:30', priority:'low'},
-  { id: 3, name: 'Quiz 2: Regular Languages',    courseId: 'csci2115', courseName: 'CSCI2115 - Theory of Computation', due: '2025-12-22T10:00' , priority:'medium'},
-  { id: 4, name: 'Project Proposal',             courseId: 'csci2170', courseName: 'CSCI2170 - Server-Side Scripting', due: '2025-12-19T18:00' , priority:'high'},
-  { id: 5, name: 'Reading: Chapter 4',           courseId: 'csci1105', courseName: 'CSCI1105 - Intro to Programming', due: '2025-12-20T08:30' , priority:'high'},
-  { id: 6, name: 'Midterm Review Notes',         courseId: 'csci2122', courseName: 'CSCI2122 - Systems Programming', due: '2025-12-21T09:00' , priority:'low'},
-])
+import ResultCount from "@/components/table/ResultCount.vue";
+import {toTitle} from "../utils/functions.ts";
+import rawTasks from'@/files/tasks.json'
+import EditTaskModal from "@/components/modals/EditTaskModal.vue";
+import AddTaskModal from "@/components/modals/AddTaskModal.vue";
 
 
-interface Props {
-  tasks : Task[]
-}
 
-const props = withDefaults(defineProps<Props>(), {
-  tasks : []
-})
-
+const fetched = ref<Task[]>() // child-owned data
 
 function filterTasksByQuery(searchQuery:String ,  tasks:Task[]):Task[]{
 
@@ -37,7 +33,7 @@ function filterTasksByQuery(searchQuery:String ,  tasks:Task[]):Task[]{
   });
 }
 
-function filterTasksByOption(sortOption: SortOption, sortDirection:Direction , tasks: Task[]):Task[] {
+function sortTasksByOption(sortOption: TaskColumns, sortDirection:Direction , tasks: Task[]):Task[] {
 
   return tasks.sort((a, b) => {
 
@@ -78,27 +74,60 @@ function filterTasksByOption(sortOption: SortOption, sortDirection:Direction , t
           return (a.name < b.name) ? 1 : -1;
         }
         break
+
+      case "status":
+        let aStatusRank = StatusRank.get(a.status);
+        let bStatusRank = StatusRank.get(b.status);
+        if (sortDirection === 'asc') {
+          return (aStatusRank < bStatusRank) ? -1 : 1;
+        } else if (sortDirection === 'desc') {
+          return (aStatusRank < bStatusRank) ? 1 : -1;
+        }
+        break
     }
 
   });
 
 }
 
+function filterTasksByOption(filterOption:TaskColumns , filterValue: TaskColOptions , tasks:Task[]):Task[]{
+
+ return tasks.filter( (task) => {
+
+   if (filterValue === "all"){
+     return task
+   }
+
+   if (task[filterOption] === filterValue){
+     return task;
+   }
+
+ });
+
+}
+
 // Ref Variables //
 const searchQuery = ref<string>('');
-const sortOption = ref<SortOption>('all')
+const sortOption = ref<TaskColumns>('all')
 const sortDirection = ref<Direction>('asc')
+
+const filterOption = ref<TaskColumns>('')
+const filterValue = ref<TaskColOptions>('');
 
  const sortedTasks = computed(()=>{
 
-   let tempTasks : Task[] = localTasks.value;
+   let tempTasks : Task[] = fetched.value; //@TODO (change this when db data gets added)
 
    if (searchQuery){
      tempTasks = filterTasksByQuery(searchQuery.value , tempTasks);
    }
 
    if (sortOption.value){
-      tempTasks = filterTasksByOption(sortOption.value , sortDirection.value , tempTasks);
+      tempTasks = sortTasksByOption(sortOption.value , sortDirection.value , tempTasks);
+   }
+
+   if (filterOption.value){
+     tempTasks = filterTasksByOption(filterOption.value,filterValue.value,tempTasks)
    }
 
    return tempTasks
@@ -106,8 +135,23 @@ const sortDirection = ref<Direction>('asc')
 
  })
 
+const filterOptionVals = computed(() => {
 
-function setSort(column:SortOption) {
+  if (filterOption.value === '') return [];
+
+  switch (filterOption.value) {
+    case 'priority':
+      return PriorityArray;
+    case 'status':
+      return StatusArray;
+    default:
+      return [];
+  }
+
+});
+
+
+function setSort(column:TaskColumns) {
 
   sortOption.value = column;
   if (sortDirection.value === 'asc'){
@@ -118,12 +162,38 @@ function setSort(column:SortOption) {
   }
 }
 
-function arrowFor(column:SortOption) {
+function arrowFor(column:TaskColumns) {
   if (sortOption.value !== column){
     return '';
   }
   return sortDirection.value === 'asc' ? '▲' : '▼'
 }
+
+function resetFilterAndSort() {
+  searchQuery.value = ''
+  sortOption.value = ''
+  sortDirection.value = ''
+  filterValue.value = ''
+  filterOption.value = ''
+}
+
+onBeforeMount(()=>{
+
+  fetched.value = rawTasks;
+
+})
+
+const taskData = ref()
+
+function taskEditHandler(saveData:Task) {
+
+
+  let test  =  saveData;
+  debugger;
+
+
+}
+
 
 </script>
 
@@ -135,7 +205,7 @@ function arrowFor(column:SortOption) {
         <h1 class="h4 mb-1">Tasks</h1>
         <p class="text-body-secondary mb-0">Browse, search, and sort your tasks. Priority mirrors the course priority.</p>
       </div>
-      <RouterLink to="/tasks/new" class="btn btn-primary">+ Add Task</RouterLink>
+      <div  class="btn btn-primary" data-bs-target="#addTaskModal" data-bs-toggle="modal">+ Add Task</div>
     </div>
 
     <!-- Controls -->
@@ -147,28 +217,27 @@ function arrowFor(column:SortOption) {
             <input id="q" v-model="searchQuery" type="search" class="form-control" placeholder="Search by task or course" />
           </div>
           <div class="col-6 col-md-3 col-lg-2">
-            <label for="sortBy" class="form-label">Sort by</label>
-            <select id="sortBy" v-model="sortOption" class="form-select">
-              <option value="due">Due date</option>
+            <label for="sortBy" class="form-label">Filter by</label>
+            <select id="sortBy" v-model="filterOption" class="form-select">
+              <option value="">None</option>
               <option value="priority">Priority</option>
-              <option value="course">Course</option>
-              <option value="name">Task name</option>
+              <option value="status">Status</option>
             </select>
           </div>
           <div class="col-6 col-md-2 col-lg-2">
-            <label for="sortDir" class="form-label">Direction</label>
-            <select id="sortDir" v-model="sortDirection" class="form-select">
-              <option value="asc">Ascending</option>
-              <option value="desc">Descending</option>
+            <label for="sortDir" class="form-label">Value</label>
+            <select id="sortDir" v-model="filterValue" class="form-select">
+              <option :value="optionValue" v-for=" optionValue in filterOptionVals">{{toTitle(optionValue)}}</option>
             </select>
           </div>
           <div class="col-12 col-md d-flex justify-content-end mt-2 mt-md-0">
-            <button class="btn btn-outline-secondary" @click="searchQuery=''; sortOption=''; sortDirection=''">Reset</button>
+            <button class="btn btn-outline-secondary" @click="resetFilterAndSort">Reset</button>
           </div>
         </div>
       </div>
     </div>
 
+    <result-count :shown="sortedTasks.length" :total="fetched.length" :small="true"/>
     <!-- Table/List -->
     <div class="card border-0 shadow-sm rounded-4">
       <div class="card-body p-0">
@@ -188,18 +257,25 @@ function arrowFor(column:SortOption) {
               <th scope="col" style="width: 140px;">
                 <button class="btn btn-link p-0 text-decoration-none" @click="setSort('priority')">Priority {{ arrowFor('priority') }}</button>
               </th>
+              <th scope="col" style="width: 140px;">
+                <button class="btn btn-link p-0 text-decoration-none" @click="setSort('status')">Status {{ arrowFor('status') }}</button>
+              </th>
               <th scope="col" class="text-end" style="width: 60px;">Actions</th>
             </tr>
             </thead>
             <tbody>
               <table-rows v-for="task in sortedTasks"
+                :id = "task.id"
                 :name = "task.name"
-                :course = "task.courseName"
-                :date = "task.due"
+                :course-name = "task.courseName"
+                :course-id = "task.courseId"
+                :due = "task.due"
                 :priority = "task.priority"
-                :priority-variant = "'danger'"
+                :status = "task.status"
+                :modal-target = "'#editTaskModal'"
+                @open-modal="(n)=> taskData = n"
               />
-            <tr v-if="localTasks.length === 0">
+            <tr v-if="fetched.length === 0">
               <td colspan="5" class="text-center text-body-secondary py-4">No tasks found.</td>
             </tr>
             </tbody>
@@ -208,6 +284,12 @@ function arrowFor(column:SortOption) {
       </div>
     </div>
   </div>
+
+
+<!-- Edit Modal  -->
+  <edit-task-modal  :modalData="taskData" @save="taskEditHandler"></edit-task-modal>
+<!--  Add Modal-->
+  <add-task-modal></add-task-modal>
 </template>
 
 <style scoped>

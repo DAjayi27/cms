@@ -1,5 +1,8 @@
 <script setup lang="ts">
 
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+
+
 const props = defineProps({
 
   assessmentName: String,
@@ -30,7 +33,7 @@ const props = defineProps({
       </div>
       <!--  content  -->
 
-      <button class="btn btn-link p-0 text-muted" aria-label="More"><i class="bi bi-three-dots-vertical"></i></button>
+      <button class="btn btn-link p-0 text-muted" aria-label="More"><font-awesome-icon icon="fa-solid fa-ellipsis-vertical" /></button>
     </div>
   </div>
 

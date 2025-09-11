@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Assignment 1: HTTP Forms",
+    "status": "not-started",
+    "courseId": "csci2170",
+    "courseName": "CSCI2170 - Server-Side Scripting",
+    "due": "2025-12-18T22:30",
+    "priority": "high"
+  },
+  {
+    "id": 2,
+    "name": "Lab 3: Memory & Pointers",
+    "status": "completed",
+    "courseId": "csci2122",
+    "courseName": "CSCI2122 - Systems Programming",
+    "due": "2025-12-14T20:30",
+    "priority": "low"
+  },
+  {
+    "id": 3,
+    "name": "Quiz 2: Regular Languages",
+    "status": "in-progress",
+    "courseId": "csci2115",
+    "courseName": "CSCI2115 - Theory of Computation",
+    "due": "2025-12-22T10:00",
+    "priority": "medium"
+  },
+  {
+    "id": 4,
+    "name": "Project Proposal",
+    "status": "not-started",
+    "courseId": "csci2170",
+    "courseName": "CSCI2170 - Server-Side Scripting",
+    "due": "2025-12-19T18:00",
+    "priority": "high"
+  },
+  {
+    "id": 5,
+    "name": "Reading: Chapter 4",
+    "status": "completed",
+    "courseId": "csci1105",
+    "courseName": "CSCI1105 - Intro to Programming",
+    "due": "2025-12-20T08:30",
+    "priority": "high"
+  },
+  {
+    "id": 6,
+    "name": "Midterm Review Notes",
+    "status": "in-progress",
+    "courseId": "csci2122",
+    "courseName": "CSCI2122 - Systems Programming",
+    "due": "2025-12-21T09:00",
+    "priority": "low"
+  }
+]

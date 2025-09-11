@@ -1,14 +1,12 @@
 <script setup lang="ts">
 
 
+import {type Priority, PriorityVariant, StatusVariant} from "@/utils/utils.ts";
+import type {Status} from "@/utils/utils.ts";
+import {toTitle} from "@/utils/functions.ts";
+import type {Task} from "@/utils/interfaces.ts";
 
-const props = defineProps({
-  name:String,
-  course:String,
-  date:String,
-  priority:String,
-  priorityVariant:String
-})
+const props = defineProps<Task>()
 
 function formatDate(date:String) {
   let dateObj = new Date(date);
@@ -26,19 +24,24 @@ function formatDate(date:String) {
   return dateObj.toLocaleDateString("en-GB",options );
 }
 
+
+
 </script>
 
 <template>
   <tr>
     <td class="fw-semibold text-truncate">{{ props.name }}</td>
-    <td class="text-truncate">{{ props.course }}</td>
-    <td><span class="text-body-secondary">{{ formatDate(props.date) }}</span></td>
+    <td class="text-truncate">{{ props.courseName }}</td>
+    <td><span class="text-body-secondary">{{ formatDate(props.due) }}</span></td>
     <td>
-      <span class="badge" :class="'text-bg-' + props.priorityVariant">{{ props.priority }}</span>
+      <span class="badge" :class="'text-bg-' + PriorityVariant.get(props.priority)">{{ toTitle(props.priority) }}</span>
+    </td>
+    <td>
+      <span class="badge" :class="'text-bg-' + StatusVariant.get(props.status)">{{ toTitle(props.status) }}</span>
     </td>
     <td class="text-end">
       <div class="btn-group">
-        <button class="btn btn-sm btn-outline-secondary">Edit</button>
+        <button class="btn btn-sm btn-outline-secondary" :data-bs-target="props.modalTarget" data-bs-toggle="modal" @click="$emit('open-modal',props)">Edit</button>
         <button class="btn btn-sm btn-outline-danger">Delete</button>
       </div>
     </td>
