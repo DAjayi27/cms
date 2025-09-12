@@ -13,6 +13,11 @@ export type CourseStatus = typeof TaskStatusArray[number];
 export type Direction = "asc" | "desc";
 
 
+export const TermArray = ["winter" , "summer" , "spring" ,"fall"] as const;
+
+export type Term = typeof TermArray[number];
+
+
 
 export const PriorityRank = new Map<Priority, number>([
     ['low', 0],

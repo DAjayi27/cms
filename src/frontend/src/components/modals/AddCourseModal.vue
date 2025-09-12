@@ -1,51 +1,134 @@
 <script setup lang="ts">
 
+import type {Course, Task} from "@/utils/interfaces.ts";
+import {ref, useTemplateRef} from "vue";
+import {type CourseStatus, CourseStatusArray, type Priority, PriorityArray, TermArray} from "@/utils/utils.ts";
+import {toTitle} from "@/utils/functions.ts";
+
+
+const defaultVals:Course = {
+  id: null,
+  status: 'active',
+  name: '',
+  term: 'fall',
+  year: 2025,
+  description: '',
+  endedAt: null,
+  imgSrc: '',
+  priority: 'low'
+
+}
+
+const emit = defineEmits<{ (e: 'cancel'): void; (e: 'addCourse', value: Course): void }>();
+
+const form = useTemplateRef('form');
+
+
+import { computed } from 'vue'
+import {fetchData} from "@/utils/fetch.ts";
+
+const priorityArr = computed(() => PriorityArray.filter(p => p !== 'all'))
+
+const statusArr = computed(() => CourseStatusArray.filter(p => p !== 'all'))
+
+let course = ref<Course>(defaultVals)
+
+async function onAddCourse() {
+
+  if (form.value.checkValidity()){
+
+    let data:Course = course.value;
+
+    const res = await fetchData('api/courses','POST',data);
+
+    if (res.ok){
+
+      let createdCourse:Course = await res.json();
+
+      emit('addCourse',createdCourse);
+    }
+
+  }else{
+    form.value.classList.add('was-validated');
+  }
+
+
+}
+
 </script>
 
 <template>
   <div
       class="modal fade"
-      id="deleteTaskModal"
+      id="createCourseModal"
       tabindex="-1"
-      aria-labelledby="deleteTaskLabel"
+      aria-labelledby="createCourseLabel"
       aria-hidden="true"
       ref="modalEl"
   >
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 id="deleteTaskLabel" class="modal-title">Delete task?</h5>
-          <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+          <h1 class="modal-title fs-5" id="addTaskModal-label">Add Course</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="emit('cancel')"></button>
         </div>
 
         <div class="modal-body">
-          <p class="mb-0">
-            Are you sure you want to delete
-            <template v-if="props.modalData?.name">
-              <strong>{{ props.modalData.name }}</strong>
-            </template>
-            <template v-else>
-              this task
-            </template>
-            ?
-            This action cannot be undone.
-          </p>
+          <form @submit.prevent class="" novalidate ref="form">
+            <div class="row g-3">
+              <!-- Name -->
+              <div class="col-12">
+                <label for="add-task-name" class="form-label">Course Title</label>
+                <input id="add-task-name" v-model="course.title" type="text" class="form-control" placeholder="CSCI 2122" required/>
+              </div>
 
+              <div class="col-12">
+                <label for="task-course" class="form-label">Course Name</label>
+                <input id="add-task-name" v-model="course.name" type="text" class="form-control" placeholder="Systems Programming" required/>
+              </div>
+
+              <!-- Year -->
+              <div class="col-6 col-md-3">
+                <label for="add-task-priority" class="form-label">Year</label>
+                <input id="add-task-name" v-model="course.year" type="text" class="form-control" placeholder="2025" required/>
+              </div>
+
+              <!-- Term -->
+              <div class="col-6 col-md-3">
+                <label for="add-task-priority" class="form-label">Term</label>
+                <select id="add-task-priority" v-model="course.term" class="form-select" required>
+                  <option v-for="term in TermArray"  :value="term"> {{toTitle(term)}} </option>
+                </select>
+              </div>
+
+
+              <!-- Priority -->
+              <div class="col-6 col-md-3">
+                <label for="add-task-priority" class="form-label">Priority</label>
+                <select id="add-task-priority" v-model="course.priority" class="form-select" required>
+                  <option v-for="priority in priorityArr" :value="priority">{{toTitle(priority)}}</option>
+                </select>
+              </div>
+
+              <!-- Status -->
+              <div class="col-6 col-md-3">
+                <label for="add-task-taskStatus" class="form-label">Status</label>
+                <select id="add-task-taskStatus" v-model="course.status" class="form-select" required>
+                  <option v-for="status in statusArr" :value="status">{{toTitle(status)}}</option>
+                </select>
+              </div>
+            </div>
+          </form>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <!-- No data-bs-dismiss: only close after confirm handler runs -->
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"  @click="handleDelete">
-            <!--            <span v-if="isBusy" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>-->
-            Delete
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="emit('cancel')">Cancel</button>
+          <button type="button" class="btn btn-primary" @click="onAddCourse">Add task</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 
 <style scoped>
 

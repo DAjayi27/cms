@@ -1,11 +1,11 @@
-import type {CourseStatus, Priority, TaskStatus} from "@/utils/utils.ts";
+import type {CourseStatus, Priority, TaskStatus, Term} from "@/utils/utils.ts";
 
 export interface Course {
     id: number
     status: CourseStatus
     title: string
     name:string
-    term: string
+    term: Term
     year: number
     description?: string
     endedAt?: string

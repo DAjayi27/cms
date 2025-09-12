@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {computed, onBeforeMount, ref} from 'vue'
+import {computed, onBeforeMount, onMounted, ref} from 'vue'
 import CourseCard from '@/components/cards/CourseCard.vue'
 import {fetchData} from "@/utils/fetch.ts";
 import type {Course} from "@/utils/interfaces.ts";
+import AddCourseModal from "@/components/modals/AddCourseModal.vue";
 
 // Optional: accept courses from parent/state; if none provided, use local mock
 
@@ -53,9 +54,10 @@ const localCourses = ref<Course[]>([
 ])
 
 
-let list = ref<Course>( []);
+let list = ref<Course[]>( []);
 
-onBeforeMount(async () => {
+
+onMounted(async () => {
 
   list.value = await getApiData();
 
@@ -102,9 +104,14 @@ async function getApiData(  ) {
 
   }
   catch (e) {
-    list.value = localCourses.value;
-    alert('ERROR');
+    console.error('error loading data');
   }
+}
+
+function addNewCourse(course:Course) {
+
+  list.value.push(course);
+
 }
 
 
@@ -119,7 +126,7 @@ async function getApiData(  ) {
         <p class="text-body-secondary mb-0">Browse and manage your enrolled courses.</p>
       </div>
       <div>
-        <RouterLink class="btn btn-primary" to="/courses/new">+ Add Course</RouterLink>
+        <div class="btn btn-primary" data-bs-target="#createCourseModal" data-bs-toggle="modal" >+ Add Course</div>
       </div>
     </div>
 
@@ -184,6 +191,9 @@ async function getApiData(  ) {
       <button class="btn btn-outline-secondary" @click="q=''; taskStatus='All'; term='All'">Clear filters</button>
     </div>
   </div>
+
+<!--  Add Course Modal-->
+  <add-course-modal @add-course="addNewCourse"></add-course-modal>
 </template>
 
 <style scoped>
