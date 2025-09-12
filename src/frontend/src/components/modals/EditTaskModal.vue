@@ -34,7 +34,7 @@ watch(modalDataRef,
 
 async function onSave() {
 
-  let res = await fetchData(`api/tasks/${saveData.id}`,'PUT',form.value);
+  let res = await fetchData(`api/tasks/${form.value.id}`,'PUT',form.value);
 
   let updatedData:Task = await res.json()
 

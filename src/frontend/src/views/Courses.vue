@@ -4,6 +4,7 @@ import CourseCard from '@/components/cards/CourseCard.vue'
 import {fetchData} from "@/utils/fetch.ts";
 import type {Course} from "@/utils/interfaces.ts";
 import AddCourseModal from "@/components/modals/AddCourseModal.vue";
+import {toTitle} from "../utils/functions.ts";
 
 // Optional: accept courses from parent/state; if none provided, use local mock
 
@@ -150,7 +151,7 @@ function addNewCourse(course:Course) {
           <div class="col-6 col-md-3 col-lg-2">
             <label class="form-label" for="courses-term">Term</label>
             <select id="courses-term" v-model="term" class="form-select">
-              <option v-for="t in termOptions" :key="t">{{ t }}</option>
+              <option v-for="t in termOptions" :key="t" :value="t">{{ toTitle(t) }}</option>
             </select>
           </div>
           <div class="col-12 col-lg d-flex gap-2 justify-content-end mt-2 mt-lg-0">

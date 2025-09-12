@@ -198,15 +198,12 @@ const taskData = ref<Task>()
 
 async function taskEditHandler(saveData:Task) {
 
-
-
-
   let index = fetched.value.findIndex((x)=> {
-    return x.id == updatedData.id
+    return x.id == saveData.id
   })
 
   if ( index !== -1){
-    fetched.value.splice(index,1,updatedData);
+    fetched.value.splice(index,1,saveData);
   }
 
 
