@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddCourseModal: typeof import('./src/components/modals/AddCourseModal.vue')['default']
     AddTaskModal: typeof import('./src/components/modals/AddTaskModal.vue')['default']
     AssementCard: typeof import('./src/components/AssementCard.vue')['default']
     AssessmentCard: typeof import('./src/components/cards/AssessmentCard.vue')['default']
@@ -17,6 +18,7 @@ declare module 'vue' {
     BCardText: typeof import('bootstrap-vue-next/components/BCard')['BCardText']
     CalendarWidget: typeof import('./src/components/dashboard/CalendarWidget.vue')['default']
     CourseCard: typeof import('./src/components/cards/CourseCard.vue')['default']
+    DeleteTaskModal: typeof import('./src/components/modals/DeleteTaskModal.vue')['default']
     EditTaskModal: typeof import('./src/components/modals/EditTaskModal.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']

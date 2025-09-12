@@ -1,24 +1,27 @@
 <script setup lang="ts">
-import {ref, toRef, watch} from 'vue'
+import {onBeforeMount, ref, toRef, watch} from 'vue'
 import type { Priority, TaskStatus } from '@/utils/utils.ts'
-import type {Task} from "@/utils/interfaces.ts";
+import type {Course, Task} from "@/utils/interfaces.ts";
+import {fetchData} from "@/utils/fetch.ts";
 
 
 
 const props = defineProps<{ modalData?: Task }>()
 const emit = defineEmits<{
   (e: 'cancel'): void
-  (e: 'save', value: Task): void
+  (e: 'edit-task', value: Task): void
 }>()
+
+const activeCourses = ref<Course[]>([]);
 
 // Local form (safe defaults so nothing is undefined)
 const form = ref<Task>({
   name: '',
   courseName: '',
   date: '',
+  courseId: 0,
   priority: 'medium' as Priority,
-  taskStatus: 'not_started' as TaskStatus,
-  modalTarget: '#editTaskModal',
+  status: 'not_started' as TaskStatus,
 })
 
 const modalDataRef = toRef(props, 'modalData')
@@ -29,9 +32,19 @@ watch(modalDataRef,
   { immediate: true, deep: true }
 )
 
-function onSave():Task {
-  emit('save', { ...form.value })
+async function onSave() {
+
+  let res = await fetchData(`api/tasks/${saveData.id}`,'PUT',form.value);
+
+  let updatedData:Task = await res.json()
+
+  emit('edit-task', updatedData)
 }
+
+onBeforeMount(async ()=>{
+  let res = await fetchData('api/courses/active' , 'GET');
+  activeCourses.value = await res.json();
+})
 </script>
 
 <template>
@@ -60,7 +73,10 @@ function onSave():Task {
 
               <div class="col-12">
                 <label for="task-course" class="form-label">Course <small class="text-danger"> *You Can Only Edit Course Name in the course page* </small> </label>
-                <input id="task-course" v-model="form.courseName" type="text" class="form-control" placeholder="e.g. CSCI2170 - Server-Side Scripting" disabled/>
+<!--                <input id="task-course" v-model="form.courseName" type="text" class="form-control" placeholder="e.g. CSCI2170 - Server-Side Scripting" disabled/>-->
+                <select id="task-course" v-model="form.courseId" class="form-select">
+                  <option v-for="course in activeCourses" :value="course.id">{{course.title}} - {{course.name}}</option>
+                </select>
               </div>
 
               <div class="col-12 col-md-6">

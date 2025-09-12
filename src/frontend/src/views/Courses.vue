@@ -75,7 +75,6 @@ const termOptions = computed(() => {
 
 const filtered = computed<Course[]>(() => {
   const query = q.value.trim().toLowerCase()
-  debugger;
   return list.value.filter(c => {
     const matchesQuery = !query || c.title.toLowerCase().includes(query) || c.term.toLowerCase().includes(query)
     const matchesStatus = taskStatus.value === 'All' || c.taskStatus === taskStatus.value
@@ -98,8 +97,6 @@ async function getApiData(  ) {
       value.imgSrc = 'https://picsum.photos/id/22/640/320';
 
     });
-
-    debugger;
 
     return data;
 
@@ -140,7 +137,7 @@ async function getApiData(  ) {
               <option>All</option>
               <option>Active</option>
               <option>Closed</option>
-              <option>Upcoming</option>
+              <option>Upcoming</option>data-bs-dismiss="modal"
             </select>
           </div>
           <div class="col-6 col-md-3 col-lg-2">

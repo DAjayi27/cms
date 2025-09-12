@@ -16,10 +16,11 @@ import rawTasks from'@/files/tasks.json'
 import EditTaskModal from "@/components/modals/EditTaskModal.vue";
 import AddTaskModal from "@/components/modals/AddTaskModal.vue";
 import {fetchData} from "@/utils/fetch.ts";
+import DeleteTaskModal from "@/components/modals/DeleteTaskModal.vue";
 
 
 
-const fetched = ref<Task[]>() // child-owned data
+const fetched = ref<Task[]>([]) // child-owned data
 
 function filterTasksByQuery(searchQuery:String ,  tasks:Task[]):Task[]{
 
@@ -117,13 +118,10 @@ const filterValue = ref<TaskColOptions>('');
 
 onBeforeMount(async () => {
 
-  let data = await fetchData('/api/tasks','GET');
+  let data = await fetchData('/api/tasks/active','GET');
 
   fetched.value = await data.json()
 
-  let test = 22;
-
-  debugger;
 
 })
 
@@ -190,21 +188,43 @@ function resetFilterAndSort() {
   filterOption.value = ''
 }
 
-onBeforeMount(()=>{
+// onBeforeMount(()=>{
+//
+//   fetched.value = rawTasks;
+//
+// })
 
-  fetched.value = rawTasks;
+const taskData = ref<Task>()
 
-})
-
-const taskData = ref()
-
-function taskEditHandler(saveData:Task) {
-
-
-  let test  =  saveData;
-  debugger;
+async function taskEditHandler(saveData:Task) {
 
 
+
+
+  let index = fetched.value.findIndex((x)=> {
+    return x.id == updatedData.id
+  })
+
+  if ( index !== -1){
+    fetched.value.splice(index,1,updatedData);
+  }
+
+
+
+}
+
+
+async function addNewTask(newTaskData:Task) {
+  fetched.value.push(newTaskData);
+}
+
+async function deleteTask(taskData:Task) {
+
+  let index = fetched.value.findIndex((x)=> {
+    return x.id == taskData.id
+  })
+
+  fetched.value.splice(index,1);
 }
 
 
@@ -287,7 +307,8 @@ function taskEditHandler(saveData:Task) {
                 :priority = "task.priority"
                 :status = "task.status"
                 :modal-target = "'#editTaskModal'"
-                @open-modal="(n)=> taskData = n"
+                @edit-task="(n)=> taskData = n"
+                @delete-task="(n) => taskData = n"
               />
             <tr v-if="fetched.length === 0">
               <td colspan="5" class="text-center text-body-secondary py-4">No tasks found.</td>
@@ -301,9 +322,10 @@ function taskEditHandler(saveData:Task) {
 
 
 <!-- Edit Modal  -->
-  <edit-task-modal  :modalData="taskData" @save="taskEditHandler"></edit-task-modal>
+  <edit-task-modal  :modalData="taskData" @edit-task="taskEditHandler"></edit-task-modal>
 <!--  Add Modal-->
-  <add-task-modal></add-task-modal>
+  <add-task-modal @add-task="addNewTask"></add-task-modal>
+  <delete-task-modal :modal-data="taskData" @delete-task="deleteTask"></delete-task-modal>
 </template>
 
 <style scoped>

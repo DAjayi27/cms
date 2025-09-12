@@ -24,6 +24,11 @@ public class CourseController {
         return (List<Course>) repo.findAll();
     }
 
+    @GetMapping("/active")
+    public List<Course> getActiveCourses(){
+        return repo.findAllActiveCourses();
+    }
+
     @GetMapping("/{id}")
     public Course getCourse(@PathVariable Long id ){
         return repo.findById(id).orElseThrow();

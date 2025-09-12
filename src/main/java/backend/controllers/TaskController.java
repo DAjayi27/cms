@@ -22,6 +22,11 @@ public class TaskController {
         return repo.findAllWithCourse();
     }
 
+    @GetMapping("/active")
+    public List<TaskWithCourse> activeTasks() {
+        return repo.findAllWithActiveCourse();
+    }
+
     @PostMapping
     public TaskWithCourse create(@RequestBody Task t) {
         Task saved = repo.save(t);                // write via entity

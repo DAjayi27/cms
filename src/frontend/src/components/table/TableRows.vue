@@ -41,8 +41,8 @@ function formatDate(date:String) {
     </td>
     <td class="text-end">
       <div class="btn-group">
-        <button class="btn btn-sm btn-outline-secondary" :data-bs-target="props.modalTarget" data-bs-toggle="modal" @click="$emit('open-modal',props)">Edit</button>
-        <button class="btn btn-sm btn-outline-danger">Delete</button>
+        <button class="btn btn-sm btn-outline-secondary" :data-bs-target="props.modalTarget" data-bs-toggle="modal" @click="$emit('edit-task',props)">Edit</button>
+        <button class="btn btn-sm btn-outline-danger" data-bs-target="#deleteTaskModal" data-bs-toggle="modal" @click="$emit('delete-task',props)">Delete</button>
       </div>
     </td>
   </tr>

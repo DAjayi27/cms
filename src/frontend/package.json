@@ -30,6 +30,7 @@
     "@floating-ui/vue": "^1.1.9",
     "@storybook/vue3-vite": "^9.1.4",
     "@tsconfig/node22": "^22.0.2",
+    "@types/bootstrap": "^5.2.10",
     "@types/node": "^22.16.5",
     "@types/vue-select": "^2.5.0",
     "@vitejs/plugin-vue": "^6.0.1",

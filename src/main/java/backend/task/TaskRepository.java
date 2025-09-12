@@ -28,12 +28,28 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
     @Query("""
         SELECT
           t.id, t.name, t.due, t.priority, t.status,
-          t.course_id AS courseId,
-          c.title     AS courseTitle,
-          c.name      AS courseName,
-          c.priority  AS coursePriority,
-          c.term      AS courseTerm,
-          c.year      AS courseYear
+          t.course_id AS course_id,
+          c.title     AS course_title,
+          c.name      AS course_name,
+          c.priority  AS course_priority,
+          c.term      AS course_term,
+          c.year      AS course_year
+        FROM task t
+        LEFT JOIN course c ON c.id = t.course_id
+        WHERE c.status != "closed"
+        ORDER BY t.due
+        """)
+    List<TaskWithCourse> findAllWithActiveCourse();
+
+    @Query("""
+        SELECT
+          t.id, t.name, t.due, t.priority, t.status,
+          t.course_id AS course_id,
+          c.title     AS course_title,
+          c.name      AS course_name,
+          c.priority  AS course_priority,
+          c.term      AS course_term,
+          c.year      AS course_year
         FROM task t
         LEFT JOIN course c ON c.id = t.course_id
         WHERE t.id = :id
@@ -43,17 +59,20 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
     @Query("""
         SELECT
           t.id, t.name, t.due, t.priority, t.status,
-          t.course_id AS courseId,
-          c.title     AS courseTitle,
-          c.name      AS courseName,
-          c.priority  AS coursePriority,
-          c.term      AS courseTerm,
-          c.year      AS courseYear
+          t.course_id AS course_id,
+          c.title     AS course_title,
+          c.name      AS course_name,
+          c.priority  AS course_priority,
+          c.term      AS course_term,
+          c.year      AS course_year
         FROM task t
         LEFT JOIN course c ON c.id = t.course_id
         WHERE (:courseId IS NULL OR t.course_id = :courseId)
         ORDER BY t.due
         """)
     List<TaskWithCourse> findWithCourse(@Param("courseId") Long courseId);
+
+
+
 
 }
