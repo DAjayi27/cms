@@ -11,3 +11,20 @@ export function toTitle(input: string): string {
         .toLowerCase()
         .replace(/\b\w/g, c => c.toUpperCase());
 }
+
+
+export function formatDate(date:string):string {
+    let dateObj = new Date(date);
+
+    const options: Intl.DateTimeFormatOptions = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hourCycle: 'h12'
+    };
+
+    return dateObj.toLocaleDateString("en-GB",options );
+}
