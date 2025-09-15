@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import {onBeforeMount, ref, toRef, watch} from 'vue'
-import type { Priority, TaskStatus } from '@/utils/utils.ts'
 import type {Course, Task} from "@/utils/interfaces.ts";
 import {fetchData} from "@/utils/fetch.ts";
 
 
 
-const props = defineProps<{ modalData?: Task }>()
+const props = defineProps<{ modalData: Task }>()
 const emit = defineEmits<{
   (e: 'cancel'): void
   (e: 'edit-task', value: Task): void
@@ -16,12 +15,14 @@ const activeCourses = ref<Course[]>([]);
 
 // Local form (safe defaults so nothing is undefined)
 const form = ref<Task>({
+  id:undefined,
   name: '',
   courseName: '',
-  date: '',
-  courseId: 0,
-  priority: 'medium' as Priority,
-  status: 'not_started' as TaskStatus,
+  courseTitle: '',
+  due: '',
+  courseId: undefined,
+  priority: 'medium',
+  status: 'not_started' ,
 })
 
 const modalDataRef = toRef(props, 'modalData')

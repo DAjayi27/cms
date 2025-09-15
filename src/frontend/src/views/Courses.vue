@@ -1,58 +1,11 @@
 <script setup lang="ts">
-import {computed, onBeforeMount, onMounted, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import CourseCard from '@/components/cards/CourseCard.vue'
 import {fetchData} from "@/utils/fetch.ts";
 import type {Course} from "@/utils/interfaces.ts";
 import AddCourseModal from "@/components/modals/AddCourseModal.vue";
 import {toTitle} from "../utils/functions.ts";
-
-// Optional: accept courses from parent/state; if none provided, use local mock
-
-
-
-const localCourses = ref<Course[]>([
-  {
-    id: 'csci2122',
-    taskStatus: 'Closed',
-    statusVariant: 'secondary',
-    priority: 'High',
-    priorityVariant: 'danger',
-    title: 'CSCI2122 - Systems Programming (Sec 1 & 2) - 2024/2025 Winter',
-    term: '2024/2025 Winter',
-    endedAt: 'May 7, 2025 at 11:59 PM',
-    imgSrc: 'https://picsum.photos/seed/sysprog/640/320?grayscale'
-  },
-  {
-    id: 'csci2170',
-    taskStatus: 'Active',
-    statusVariant: 'success',
-    priority: 'Medium',
-    priorityVariant: 'warning',
-    title: 'CSCI2170 - Server-Side Scripting - 2025 Summer',
-    term: '2025 Summer',
-    imgSrc: 'https://picsum.photos/seed/sss/640/320'
-  },
-  {
-    id: 'csci2115',
-    taskStatus: 'Active',
-    statusVariant: 'success',
-    priority: 'Low',
-    priorityVariant: 'secondary',
-    title: 'CSCI2115 - Theory of Computation - 2025 Summer',
-    term: '2025 Summer',
-    imgSrc: 'https://picsum.photos/seed/toc/640/320'
-  },
-  {
-    id: 'csci1105',
-    taskStatus: 'Upcoming',
-    statusVariant: 'warning',
-    priority: 'Medium',
-    priorityVariant: 'info',
-    title: 'CSCI1105 - Intro to Programming - 2026 Winter',
-    term: '2026 Winter',
-    imgSrc: 'https://picsum.photos/seed/intro/640/320'
-  }
-])
+import type {CourseStatus, Term} from "@/utils/utils.ts";
 
 
 let list = ref<Course[]>( []);
@@ -67,8 +20,8 @@ onMounted(async () => {
 
 // Filters
 const q = ref('')
-const taskStatus = ref<'All' | 'Active' | 'Closed' | 'Upcoming'>('All')
-const term = ref<'All' | string>('All')
+const courseStatus = ref<CourseStatus>('all')
+const term = ref<Term>('all')
 
 // Build term options from the data
 const termOptions = computed(() => {
@@ -80,16 +33,17 @@ const filtered = computed<Course[]>(() => {
   const query = q.value.trim().toLowerCase()
   return list.value.filter(c => {
     const matchesQuery = !query || c.title.toLowerCase().includes(query) || c.term.toLowerCase().includes(query)
-    const matchesStatus = taskStatus.value === 'All' || c.taskStatus === taskStatus.value
-    const matchesTerm = term.value === 'All' || c.term === term.value
+    const matchesStatus = courseStatus.value === 'all' || c.status === courseStatus.value
+    const matchesTerm = term.value === 'all' || c.term === term.value
     return matchesQuery && matchesStatus && matchesTerm
   })
 })
 
 
-async function getApiData(  ) {
+async function getApiData(  ):Promise<Course[]> {
 
   let res;
+
   try {
     res = await fetchData('/api/courses','GET');
 
@@ -107,6 +61,8 @@ async function getApiData(  ) {
   catch (e) {
     console.error('error loading data');
   }
+
+  return [];
 }
 
 function addNewCourse(course:Course) {
@@ -141,11 +97,11 @@ function addNewCourse(course:Course) {
           </div>
           <div class="col-6 col-md-3 col-lg-2">
             <label class="form-label" for="courses-taskStatus">Status</label>
-            <select id="courses-taskStatus" v-model="taskStatus" class="form-select">
-              <option>All</option>
-              <option>Active</option>
-              <option>Closed</option>
-              <option>Upcoming</option>data-bs-dismiss="modal"
+            <select id="courses-taskStatus" v-model="courseStatus" class="form-select">
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="closed">Closed</option>
+              <option value="upcoming">Upcoming</option>data-bs-dismiss="modal"
             </select>
           </div>
           <div class="col-6 col-md-3 col-lg-2">
@@ -155,7 +111,7 @@ function addNewCourse(course:Course) {
             </select>
           </div>
           <div class="col-12 col-lg d-flex gap-2 justify-content-end mt-2 mt-lg-0">
-            <button class="btn btn-outline-secondary" @click="q=''; taskStatus='All'; term='All'">Reset</button>
+            <button class="btn btn-outline-secondary" @click="q=''; courseStatus='all'; term='all'">Reset</button>
           </div>
         </div>
       </div>
@@ -172,6 +128,7 @@ function addNewCourse(course:Course) {
         <!-- Wrap in RouterLink if you have a course detail route -->
         <RouterLink class="text-reset text-decoration-none" :to="{ name: 'course', params: { id: c.id } }">
           <CourseCard
+              :id = "c.id"
               :status="c.status"
               :title="c.title"
               :name="c.name"
@@ -180,7 +137,6 @@ function addNewCourse(course:Course) {
               :ended-at="c.endedAt"
               :img-src="c.imgSrc"
               :priority="c.priority"
-              :priority-variant="c.priorityVariant"
           />
         </RouterLink>
       </div>
@@ -189,7 +145,7 @@ function addNewCourse(course:Course) {
     <!-- Empty state -->
     <div v-if="filtered.length === 0" class="text-center text-body-secondary py-5">
       <p class="mb-1">No courses match your filters.</p>
-      <button class="btn btn-outline-secondary" @click="q=''; taskStatus='All'; term='All'">Clear filters</button>
+      <button class="btn btn-outline-secondary" @click="q=''; courseStatus='all'; term='all'">Clear filters</button>
     </div>
   </div>
 

@@ -3,7 +3,7 @@
 import type {Task} from "@/utils/interfaces.ts";
 import {fetchData} from "@/utils/fetch.ts";
 
-const props = defineProps<{ modalData?: Task }>()
+const props = defineProps<{ modalData: Task }>()
 const emit = defineEmits<{
   (e: 'cancel'): void
   (e: 'delete-task', value: Task): void
@@ -31,6 +31,7 @@ async function handleDelete() {
       aria-labelledby="deleteTaskLabel"
       aria-hidden="true"
       ref="modalEl"
+      v-if="modalData"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">

@@ -3,7 +3,6 @@ import {ref, watch, toRef, onBeforeMount, useTemplateRef} from 'vue'
 import type { Priority, TaskStatus } from '@/utils/utils.ts'
 import type {Course, Task} from '@/utils/interfaces.ts'
 import {fetchData} from "@/utils/fetch.ts";
-import * as bootstrap from 'bootstrap';
 
 // Optional prefill values (e.g., when adding from a specific course)
 const props = defineProps<{ prefill?: Partial<Task> }>()
@@ -62,7 +61,7 @@ async function onAddTask() {
 
   // Clear fields (or formEl.reset() if you prefer)
   form.value.name = ''
-  form.value.courseId = null
+  form.value.courseId = undefined
 }
 
 

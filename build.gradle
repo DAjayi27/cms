@@ -1,4 +1,4 @@
-import com.github.gradle.node.task.NodeTask
+
 
 plugins {
 	id 'java'
@@ -88,6 +88,10 @@ tasks.register('copyToStatic',Copy){
 	dependsOn 'buildFrontend'
 	from('src/frontend/dist')
 	into("build/resources/main/static")
+}
+
+tasks.named('processResources') {
+	dependsOn 'copyToStatic'
 }
 
 

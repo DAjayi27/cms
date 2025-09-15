@@ -6,13 +6,11 @@ import {
   type Direction,
   PriorityArray,
   PriorityRank, TaskStatusArray, TaskStatusRank,
-  type TaskColOptions,
-  type TaskColumns
+  type TaskColumns, type FilterOptions, type FilterValue
 } from "@/utils/utils.ts";
 
 import ResultCount from "@/components/table/ResultCount.vue";
 import {toTitle} from "../utils/functions.ts";
-import rawTasks from'@/files/tasks.json'
 import EditTaskModal from "@/components/modals/EditTaskModal.vue";
 import AddTaskModal from "@/components/modals/AddTaskModal.vue";
 import {fetchData} from "@/utils/fetch.ts";
@@ -22,7 +20,7 @@ import DeleteTaskModal from "@/components/modals/DeleteTaskModal.vue";
 
 const fetched = ref<Task[]>([]) // child-owned data
 
-function filterTasksByQuery(searchQuery:String ,  tasks:Task[]):Task[]{
+function filterTasksByQuery(searchQuery:string ,  tasks:Task[]):Task[]{
 
   searchQuery = searchQuery.toLowerCase();
 
@@ -37,66 +35,52 @@ function filterTasksByQuery(searchQuery:String ,  tasks:Task[]):Task[]{
 
 function sortTasksByOption(sortOption: TaskColumns, sortDirection:Direction , tasks: Task[]):Task[] {
 
+  const dir = sortDirection === "asc" ? 1 : -1;
+
   return tasks.sort((a, b) => {
-
     switch (sortOption) {
-      case "course":
-        if (sortDirection === 'asc') {
-          return (a.courseName < b.courseName) ? -1 : 1;
-        } else if (sortDirection === 'desc') {
-          return (a.courseName < b.courseName) ? 1 : -1;
+      case "course": {
+        // strings
+        return a.courseName.localeCompare(b.courseName) * dir;
+      }
 
-        }
-        break;
+      case "name": {
+        // strings
+        return a.name.localeCompare(b.name) * dir;
+      }
 
-      case "due":
-        let dateA = new Date(a.due);
-        let dateB = new Date(b.due);
-        if (sortDirection === 'asc') {
-          return (dateA < dateB) ? -1 : 1;
-        } else if (sortDirection === 'desc') {
-          return (dateA < dateB) ? 1 : -1;
-        }
-        break;
+      case "due": {
+        // dates → numbers
+        const ta = new Date(a.due).getTime();
+        const tb = new Date(b.due).getTime();
+        return (ta - tb) * dir;
+      }
 
-      case "priority":
-        let aRank = PriorityRank.get(a.priority);
-        let bRank = PriorityRank.get(b.priority);
-        if (sortDirection === 'asc') {
-          return (aRank < bRank) ? -1 : 1;
-        } else if (sortDirection === 'desc') {
-          return (aRank < bRank) ? 1 : -1;
-        }
-        break
+      case "priority": {
+        // numeric ranks; ensure defaults so it's always a number
+        const ar = PriorityRank[a.priority];
+        const br = PriorityRank[b.priority];
+        return (ar - br) * dir;
+      }
 
-      case "name":
-        if (sortDirection === 'asc') {
-          return (a.name < b.name) ? -1 : 1;
-        } else if (sortDirection === 'desc') {
-          return (a.name < b.name) ? 1 : -1;
-        }
-        break
-
-      case "status":
-        let aStatusRank = TaskStatusRank.get(a.status);
-        let bStatusRank = TaskStatusRank.get(b.status);
-        if (sortDirection === 'asc') {
-          return (aStatusRank < bStatusRank) ? -1 : 1;
-        } else if (sortDirection === 'desc') {
-          return (aStatusRank < bStatusRank) ? 1 : -1;
-        }
-        break
+      case "status": {
+        const ar = TaskStatusRank[a.status];
+        const br = TaskStatusRank[b.status];
+        return (ar - br) * dir;
+      }
     }
 
+    // If an unknown sortOption sneaks in, keep order unchanged
+    return 0;
   });
 
 }
 
-function filterTasksByOption(filterOption:TaskColumns , filterValue: TaskColOptions , tasks:Task[]):Task[]{
+function filterTasksByOption(filterOption:FilterOptions , filterValue: FilterValue , tasks:Task[]):Task[]{
 
  return tasks.filter( (task) => {
 
-   if (filterValue === "all"){
+   if (filterValue === "all" || filterOption === "none"){
      return task
    }
 
@@ -110,11 +94,11 @@ function filterTasksByOption(filterOption:TaskColumns , filterValue: TaskColOpti
 
 // Ref Variables //
 const searchQuery = ref<string>('');
-const sortOption = ref<TaskColumns>('all')
+const sortOption = ref<TaskColumns>('due')
 const sortDirection = ref<Direction>('asc')
 
-const filterOption = ref<TaskColumns>('')
-const filterValue = ref<TaskColOptions>('');
+const filterOption = ref<FilterOptions>('none')
+const filterValue = ref<FilterValue>('all');
 
 onBeforeMount(async () => {
 
@@ -148,7 +132,7 @@ onBeforeMount(async () => {
 
 const filterOptionVals = computed(() => {
 
-  if (filterOption.value === '') return [];
+  if (filterOption.value === 'none') return [];
 
   switch (filterOption.value) {
     case 'priority':
@@ -182,10 +166,10 @@ function arrowFor(column:TaskColumns) {
 
 function resetFilterAndSort() {
   searchQuery.value = ''
-  sortOption.value = ''
-  sortDirection.value = ''
-  filterValue.value = ''
-  filterOption.value = ''
+  sortOption.value = 'due'
+  sortDirection.value = 'asc'
+  filterValue.value = 'all'
+  filterOption.value = 'none'
 }
 
 // onBeforeMount(()=>{
@@ -249,7 +233,7 @@ async function deleteTask(taskData:Task) {
           <div class="col-6 col-md-3 col-lg-2">
             <label for="sortBy" class="form-label">Filter by</label>
             <select id="sortBy" v-model="filterOption" class="form-select">
-              <option value="">None</option>
+              <option value="none">None</option>
               <option value="priority">Priority</option>
               <option value="status">Status</option>
             </select>
@@ -257,7 +241,7 @@ async function deleteTask(taskData:Task) {
           <div class="col-6 col-md-2 col-lg-2">
             <label for="sortDir" class="form-label">Value</label>
             <select id="sortDir" v-model="filterValue" class="form-select">
-              <option :value="optionValue" v-for=" optionValue in filterOptionVals">{{toTitle(optionValue)}}</option>
+              <option :value="opt" v-for=" opt in filterOptionVals" >{{toTitle(opt)}}</option>
             </select>
           </div>
           <div class="col-12 col-md d-flex justify-content-end mt-2 mt-md-0">
@@ -303,9 +287,8 @@ async function deleteTask(taskData:Task) {
                 :due = "task.due"
                 :priority = "task.priority"
                 :status = "task.status"
-                :modal-target = "'#editTaskModal'"
-                @edit-task="(n)=> taskData = n"
-                @delete-task="(n) => taskData = n"
+                @edit-task="(n:Task)=> taskData = n"
+                @delete-task="(n:Task) => taskData = n"
               />
             <tr v-if="fetched.length === 0">
               <td colspan="5" class="text-center text-body-secondary py-4">No tasks found.</td>
@@ -319,10 +302,10 @@ async function deleteTask(taskData:Task) {
 
 
 <!-- Edit Modal  -->
-  <edit-task-modal  :modalData="taskData" @edit-task="taskEditHandler"></edit-task-modal>
+  <edit-task-modal v-if="taskData"  :modalData="taskData" @edit-task="taskEditHandler"></edit-task-modal>
 <!--  Add Modal-->
   <add-task-modal @add-task="addNewTask"></add-task-modal>
-  <delete-task-modal :modal-data="taskData" @delete-task="deleteTask"></delete-task-modal>
+  <delete-task-modal v-if="taskData" :modal-data="taskData" @delete-task="deleteTask"></delete-task-modal>
 </template>
 
 <style scoped>
