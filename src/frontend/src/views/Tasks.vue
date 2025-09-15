@@ -15,6 +15,7 @@ import EditTaskModal from "@/components/modals/EditTaskModal.vue";
 import AddTaskModal from "@/components/modals/AddTaskModal.vue";
 import {fetchData} from "@/utils/fetch.ts";
 import DeleteTaskModal from "@/components/modals/DeleteTaskModal.vue";
+import {defaultTask} from "@/utils/defaults.ts";
 
 
 
@@ -178,7 +179,7 @@ function resetFilterAndSort() {
 //
 // })
 
-const taskData = ref<Task>()
+const taskData = ref<Task>(defaultTask)
 
 async function taskEditHandler(saveData:Task) {
 
@@ -302,10 +303,10 @@ async function deleteTask(taskData:Task) {
 
 
 <!-- Edit Modal  -->
-  <edit-task-modal v-if="taskData"  :modalData="taskData" @edit-task="taskEditHandler"></edit-task-modal>
+  <edit-task-modal  :modalData="taskData" @edit-task="taskEditHandler"></edit-task-modal>
 <!--  Add Modal-->
   <add-task-modal @add-task="addNewTask"></add-task-modal>
-  <delete-task-modal v-if="taskData" :modal-data="taskData" @delete-task="deleteTask"></delete-task-modal>
+  <delete-task-modal  :modal-data="taskData" @delete-task="deleteTask"></delete-task-modal>
 </template>
 
 <style scoped>
