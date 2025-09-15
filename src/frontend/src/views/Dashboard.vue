@@ -1,20 +1,53 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import {ref, computed, onMounted} from 'vue'
 import CourseCard from '@/components/cards/CourseCard.vue'
 import StatsCard from "@/components/dashboard/StatsCard.vue";
 import CalendarWidget from "@/components/dashboard/CalendarWidget.vue";
 import UpcomingAssessments from "@/components/dashboard/UpcomingAssessments.vue";
 import type {Course} from "@/utils/interfaces.ts";
+import {fetchData} from "@/utils/fetch.ts";
 
 // Keep data minimal so everything fits without scrolling
 const userName = 'Daniel'
 
 const courses = ref<Course[]>([])
 
+onMounted(async () => {
+
+  courses.value = await getApiData();
+
+});
+
 const coursesTop = computed(() => courses?.value.slice(0, 3))
 
 function onAddTask() {}
 function onAddCourse() {}
+
+async function getApiData(  ):Promise<Course[]> {
+
+  let res;
+
+  try {
+    res = await fetchData('/api/courses/active','GET');
+
+    let activeCourses:Course[] = await res.json();
+
+    activeCourses.forEach((value) => {
+
+      value.imgSrc = 'https://picsum.photos/id/22/640/320';
+
+    });
+
+
+    return activeCourses;
+
+  }
+  catch (e) {
+    console.error('error loading data');
+  }
+
+  return [];
+}
 </script>
 
 <template>
@@ -48,8 +81,8 @@ function onAddCourse() {}
       </div>
 
       <!-- Deadlines + Calendar (compact) -->
-      <div class="row g-3 align-items-stretch" style="min-height: 0;">
-        <div class="col-12 col-lg-8">
+      <div class="row g-3 align-items-stretch">
+        <div class="col-12 col-lg-8" >
           <upcoming-assessments></upcoming-assessments>
         </div>
         <div class="col-12 col-lg-4">

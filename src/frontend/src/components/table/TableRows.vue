@@ -2,26 +2,12 @@
 
 
 import { PriorityVariant, TaskStatusVariant} from "@/utils/utils.ts";
-import {toTitle} from "@/utils/functions.ts";
+import {formatDate, toTitle} from "@/utils/functions.ts";
 import type {Task} from "@/utils/interfaces.ts";
 
 const props = defineProps<Task>()
 
-function formatDate(date:string) {
-  let dateObj = new Date(date);
 
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    hourCycle: 'h12'
-  };
-
-  return dateObj.toLocaleDateString("en-GB",options );
-}
 
 
 
