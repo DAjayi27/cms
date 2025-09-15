@@ -7,13 +7,14 @@ import {toTitle} from "@/utils/functions.ts";
 
 
 const defaultVals:Course = {
-  id: null,
+  id: undefined,
+  title: '',
   status: 'active',
   name: '',
   term: 'fall',
   year: 2025,
   description: '',
-  endedAt: null,
+  endedAt: '',
   imgSrc: '',
   priority: 'low'
 
@@ -34,6 +35,8 @@ const statusArr = computed(() => CourseStatusArray.filter(p => p !== 'all'))
 let course = ref<Course>(defaultVals)
 
 async function onAddCourse() {
+
+  if (!form.value) {return;}
 
   if (form.value.checkValidity()){
 

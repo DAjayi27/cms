@@ -3,9 +3,7 @@
 import AssessmentCard from "@/components/cards/AssessmentCard.vue";
 import {ref} from "vue";
 
-const props = defineProps({
-  title: "Test",
-});
+
 
 const tasks = ref([
   { id: 1, title: '3D Animation Conference', date: 'Dec 14, 08:30 PM', gradient: 'linear-gradient(135deg, #ff7a18, #af002d 85%)', badge: '21' },
@@ -41,7 +39,7 @@ const selectedOption = ref('Week');
         <assessment-card
             v-for="t in tasks" :key="t.id"
             :assessment-name=" t.title"
-            :assessment-date="t.date"
+            :assessment-date="new Date(t.date)"
             assessment-course="CSCI2170 - Server-Side Scripting"
             :gradient = t.gradient
         />

@@ -62,7 +62,7 @@ async function onAddTask() {
 
   // Clear fields (or formEl.reset() if you prefer)
   form.value.name = ''
-  form.value.courseId = null
+  form.value.courseId = undefined
 }
 
 

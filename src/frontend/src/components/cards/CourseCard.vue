@@ -1,25 +1,13 @@
 <script setup lang="ts">
 import {toTitle} from "@/utils/functions.ts";
 import {CourseStatusVariant, PriorityVariant, TaskStatusVariant} from "@/utils/utils.ts";
+import type {Course} from "@/utils/interfaces.ts";
 
-interface Props {
-  status: string
-  title: string
-  name:string
-  term: string
-  year: number
-  description?: string
-  endedAt?: string
-  imgSrc?: string
-  // CourseCard.vue props
-  priority?: string
-}
 
-const props = withDefaults(defineProps<Props>(), {
-  status: 'Open',
-  statusVariant: 'primary',
-  priority: '',
-  priorityVariant: 'secondary',
+
+const props = withDefaults(defineProps<Course>(), {
+  status: 'active',
+  priority: 'low',
   description: '',
   endedAt: ''
 })
@@ -37,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
       <span
           v-if="props.status"
           class="badge position-absolute start-0 top-0 m-2"
-          :class="'text-bg-' + CourseStatusVariant.get(props.status)"
+          :class="'text-bg-' + CourseStatusVariant[props.status]"
       >
         {{toTitle(props.status)}}
       </span>
@@ -46,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
     <div class="card-body">
       <!-- Status -->
       <div v-if="props.priority" class="mb-2 d-flex flex-wrap gap-1">
-        <span class="badge" :class="'text-bg-' + PriorityVariant.get(props.priority)">{{ toTitle(props.priority) }}</span>
+        <span class="badge" :class="'text-bg-' + PriorityVariant[props.priority]">{{ toTitle(props.priority) }}</span>
       </div>
 
       <!-- Title -->
