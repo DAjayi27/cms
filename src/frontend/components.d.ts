@@ -10,12 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AddCourseModal: typeof import('./src/components/modals/AddCourseModal.vue')['default']
     AddTaskModal: typeof import('./src/components/modals/AddTaskModal.vue')['default']
-    AssementCard: typeof import('./src/components/AssementCard.vue')['default']
     AssessmentCard: typeof import('./src/components/cards/AssessmentCard.vue')['default']
-    AssessmentCardCard: typeof import('./src/components/AssessmentCardCard.vue')['default']
-    BButton: typeof import('bootstrap-vue-next/components/BButton')['BButton']
-    BCard: typeof import('bootstrap-vue-next/components/BCard')['BCard']
-    BCardText: typeof import('bootstrap-vue-next/components/BCard')['BCardText']
     CalendarWidget: typeof import('./src/components/dashboard/CalendarWidget.vue')['default']
     CourseCard: typeof import('./src/components/cards/CourseCard.vue')['default']
     DeleteTaskModal: typeof import('./src/components/modals/DeleteTaskModal.vue')['default']
@@ -32,7 +27,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     StatsCard: typeof import('./src/components/dashboard/StatsCard.vue')['default']
     TableRows: typeof import('./src/components/table/TableRows.vue')['default']
-    UpcomingAssements: typeof import('./src/components/UpcomingAssements.vue')['default']
     UpcomingAssessments: typeof import('./src/components/dashboard/UpcomingAssessments.vue')['default']
   }
   export interface GlobalDirectives {

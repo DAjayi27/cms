@@ -1,3 +1,5 @@
+import com.github.gradle.node.task.NodeTask
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.5'
@@ -5,6 +7,7 @@ plugins {
 	id 'org.hibernate.orm' version '6.6.26.Final'
 	id 'org.graalvm.buildtools.native' version '0.10.6'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+	id "com.github.node-gradle.node" version "7.1.0"
 }
 
 group = 'com.example'
@@ -15,6 +18,13 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
+}
+
+
+node {
+	version = '22.12.0'      // pick your Node version
+	download = true          // Gradle will fetch a local Node into .gradle
+	npmInstallCommand = 'ci'
 }
 
 repositories {
@@ -56,4 +66,30 @@ tasks.named('asciidoctor') {
 	inputs.dir snippetsDir
 	dependsOn test
 }
+
+tasks.register('installPackages', NpmTask) {
+	// install the express package only
+	args = ['ci']
+}
+
+//tasks.register('runDevServer' , NpmTask){
+//	dependsOn 'installPackages'
+//	args = ['run' , 'dev']
+//	workingDir = file('/src/frontend')
+//}
+
+tasks.register('buildFrontend' ,NpmTask){
+	dependsOn 'installPackages'
+	args = ['run','build']
+	workingDir = file('/src/frontend')
+}
+
+tasks.register('copyToStatic',Copy){
+	dependsOn 'buildFrontend'
+	from('src/frontend/dist')
+	into("build/resources/main/static")
+}
+
+
+
 
