@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 
-import {type Priority, PriorityVariant, TaskStatusVariant} from "@/utils/utils.ts";
+import { PriorityVariant, TaskStatusVariant} from "@/utils/utils.ts";
 import {toTitle} from "@/utils/functions.ts";
 import type {Task} from "@/utils/interfaces.ts";
 

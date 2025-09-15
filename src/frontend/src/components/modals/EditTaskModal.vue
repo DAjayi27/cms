@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {onBeforeMount, ref, toRef, watch} from 'vue'
-import type { Priority, TaskStatus } from '@/utils/utils.ts'
 import type {Course, Task} from "@/utils/interfaces.ts";
 import {fetchData} from "@/utils/fetch.ts";
 

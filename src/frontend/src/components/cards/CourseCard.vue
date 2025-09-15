@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {toTitle} from "@/utils/functions.ts";
-import {CourseStatusVariant, PriorityVariant, TaskStatusVariant} from "@/utils/utils.ts";
+import {CourseStatusVariant, PriorityVariant} from "@/utils/utils.ts";
 import type {Course} from "@/utils/interfaces.ts";
 
 

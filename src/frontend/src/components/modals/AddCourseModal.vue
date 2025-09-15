@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import type {Course, Task} from "@/utils/interfaces.ts";
+import type {Course} from "@/utils/interfaces.ts";
 import {ref, useTemplateRef} from "vue";
-import {type CourseStatus, CourseStatusArray, type Priority, PriorityArray, TermArray} from "@/utils/utils.ts";
+import { CourseStatusArray,  PriorityArray, TermArray} from "@/utils/utils.ts";
 import {toTitle} from "@/utils/functions.ts";
 
 

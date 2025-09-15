@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onBeforeMount, onMounted, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import CourseCard from '@/components/cards/CourseCard.vue'
 import {fetchData} from "@/utils/fetch.ts";
 import type {Course} from "@/utils/interfaces.ts";
