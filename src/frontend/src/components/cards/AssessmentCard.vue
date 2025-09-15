@@ -5,6 +5,8 @@ import type {Task} from "@/utils/interfaces.ts";
 import {defaultTask} from "@/utils/defaults.ts";
 import {formatDate, toTitle} from "@/utils/functions.ts";
 import {TaskStatusVariant} from "@/utils/utils.ts";
+import {onMounted} from "vue";
+import {Dropdown} from "bootstrap";
 
 
 const props = defineProps<Task>();
@@ -54,8 +56,10 @@ function generateGradient():string {
         </small>
       </div>
       <!--  content  -->
-
-      <button class="btn btn-link p-0 text-muted" aria-label="More"><font-awesome-icon icon="fa-solid fa-ellipsis-vertical" /></button>
+      <div class="btn-group">
+        <button class="btn btn-sm btn-outline-secondary" data-bs-target="#editTaskModal" data-bs-toggle="modal" @click="$emit('edit-task',props)">Edit</button>
+        <button class="btn btn-sm btn-outline-danger" data-bs-target="#deleteTaskModal" data-bs-toggle="modal" @click="$emit('delete-task',props)">Delete</button>
+      </div>
     </div>
   </div>
 

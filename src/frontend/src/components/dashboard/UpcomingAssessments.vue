@@ -4,6 +4,11 @@ import AssessmentCard from "@/components/cards/AssessmentCard.vue";
 import {computed, onMounted, ref} from "vue";
 import type {Task} from "@/utils/interfaces.ts";
 import {fetchData} from "@/utils/fetch.ts";
+import TableRows from "@/components/table/TableRows.vue";
+import EditTaskModal from "@/components/modals/EditTaskModal.vue";
+import AddTaskModal from "@/components/modals/AddTaskModal.vue";
+import DeleteTaskModal from "@/components/modals/DeleteTaskModal.vue";
+import {defaultTask} from "@/utils/defaults.ts";
 
 
 const tasks = ref<Task[]>([]);
@@ -41,14 +46,14 @@ const filteredTasks =  computed<Task[]>(()=>{
   let currentDay = new Date(Date.now())
   let currentDayOfWeek = currentDay.getDay();
 
-  let firstDayOfWeek = currentDay;
+  let firstDayOfWeek = new Date(currentDay);
   let lastDayOfWeek = null;
 
   if (currentDayOfWeek !== 0 ){
     firstDayOfWeek.setDate(firstDayOfWeek.getDate() - currentDayOfWeek )
   }
 
-  lastDayOfWeek = firstDayOfWeek;
+  lastDayOfWeek = new Date(firstDayOfWeek);
   lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6)
 
   if (!tasks.value) return [];
@@ -60,7 +65,8 @@ const filteredTasks =  computed<Task[]>(()=>{
     switch (selectedOption.value) {
 
       case 'Day':
-        return (currentDay === taskDay);
+        debugger
+        return (currentDay.toDateString() === taskDay.toDateString());
 
       case 'Week':
         return ( taskDay >= firstDayOfWeek && taskDay <= lastDayOfWeek  )
@@ -84,7 +90,27 @@ const filteredTasks =  computed<Task[]>(()=>{
 })
 
 
+const taskData = ref<Task>(defaultTask)
 
+async function deleteTask(taskData:Task) {
+
+  let index = tasks.value.findIndex((x)=> {
+    return x.id == taskData.id
+  })
+
+  tasks.value.splice(index,1);
+}
+
+async function editTask(saveData:Task) {
+
+  let index = tasks.value.findIndex((x)=> {
+    return x.id == saveData.id
+  })
+
+  if ( index !== -1){
+    tasks.value.splice(index,1,saveData);
+  }
+}
 
 </script>
 
@@ -107,7 +133,7 @@ const filteredTasks =  computed<Task[]>(()=>{
         <!-- Dropdown -->
       </div>
 
-      <div class="d-flex flex-column gap-2 overflow-y-auto" style="max-height: 34vh">
+      <div class="d-flex flex-column gap-2 overflow-y-auto position-relative" style="max-height: 34vh">
         <assessment-card
             v-for="t in filteredTasks.slice(0,5)" :key="t.id"
             :id="t.id"
@@ -118,6 +144,8 @@ const filteredTasks =  computed<Task[]>(()=>{
             :course-name="t.courseName"
             :course-id="t.courseId"
             :due="t.due"
+            @edit-task="(n:Task)=> taskData = n"
+            @delete-task="(n:Task) => taskData = n"
         />
         <div v-if="filteredTasks.length === 0">
           <div class="text-center text-body-secondary py-4">No tasks due this {{selectedOption.toLowerCase()}}.</div>
@@ -130,6 +158,11 @@ const filteredTasks =  computed<Task[]>(()=>{
 
     </div>
   </div>
+
+  <!-- Edit Modal  -->
+  <edit-task-modal  :modalData="taskData" @edit-task="editTask"></edit-task-modal>
+  <delete-task-modal  :modal-data="taskData" @delete-task="deleteTask"></delete-task-modal>
+
 </template>
 
 
