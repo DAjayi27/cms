@@ -3,15 +3,15 @@
 import AssessmentCard from "@/components/cards/AssessmentCard.vue";
 import {computed, onMounted, ref} from "vue";
 import type {Task} from "@/utils/interfaces.ts";
-import {fetchData} from "@/utils/fetch.ts";
-import TableRows from "@/components/table/TableRows.vue";
 import EditTaskModal from "@/components/modals/EditTaskModal.vue";
-import AddTaskModal from "@/components/modals/AddTaskModal.vue";
 import DeleteTaskModal from "@/components/modals/DeleteTaskModal.vue";
 import {defaultTask} from "@/utils/defaults.ts";
 
 
-const tasks = ref<Task[]>([]);
+
+
+
+const tasks = defineModel<Task[]>('tasks',{required:true})
 
 type selectOptions = "Day" | "Week" | "Month";
 
@@ -21,22 +21,7 @@ const selectedOption = ref<selectOptions>('Week');
 
 onMounted(async () => {
 
-  try {
-    let res = await fetchData('api/tasks/active','GET');
 
-    let data:Task[] = await res.json();
-
-    data.sort( (a, b) => {
-      const ta = new Date(a.due).getTime();
-      const tb = new Date(b.due).getTime();
-      return (ta - tb);
-    })
-
-    tasks.value = data;
-  }
-  catch (e) {
-
-  }
 
 })
 
@@ -56,7 +41,7 @@ const filteredTasks =  computed<Task[]>(()=>{
   lastDayOfWeek = new Date(firstDayOfWeek);
   lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6)
 
-  if (!tasks.value) return [];
+  if (!tasks?.value) return [];
 
   let filter:Task[] = tasks.value.filter((task) => {
 

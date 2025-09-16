@@ -12,6 +12,10 @@ const props = withDefaults(defineProps<Course>(), {
   endedAt: ''
 })
 
+
+const emits = defineEmits<{ (e: 'cancel'): void; (e: 'deleteCourse', value: Course): void }>();
+
+
 </script>
 
 <template>
@@ -48,7 +52,17 @@ const props = withDefaults(defineProps<Course>(), {
 
       <!-- End Date -->
       <small v-if="props.endedAt" class="text-muted">Ended {{ props.endedAt }}</small>
+
+      <div class="d-flex justify-content-end mt-2">
+        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-target="#deleteCourseModal"
+                data-bs-toggle ="modal" @click="$emit('deleteCourse',props)"
+        >
+          <i class="bi bi-trash me-1"></i> Delete
+        </button>
+      </div>
+
     </div>
+
   </div>
 </template>
 
