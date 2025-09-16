@@ -4,9 +4,9 @@ import NavBar from "@/components/NavBar.vue";
 </script>
 
 <template>
-  <div class="main-container">
+  <div class="main-container ">
     <nav-bar/>
-    <main >
+    <main class="bg-body-tertiary" >
       <router-view></router-view>
     </main>
   </div>
@@ -20,8 +20,6 @@ import NavBar from "@/components/NavBar.vue";
   height: 100%;
   min-height: 100vh;
 }
-
-main { background: #f6f7fb; }
 
 
 

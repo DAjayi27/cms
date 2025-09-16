@@ -19,7 +19,7 @@ const emits = defineEmits<{ (e: 'cancel'): void; (e: 'deleteCourse', value: Cour
 </script>
 
 <template>
-  <div class="card border-0 shadow-sm h-100" style="border-radius: .75rem; overflow: hidden;">
+  <div class="card border-0 bg-body-secondary h-100" style="border-radius: .75rem; overflow: hidden;">
     <!-- Image -->
     <div class="position-relative">
       <img v-if="props.imgSrc" :src="props.imgSrc" class="card-img-top" alt="Course image" />
