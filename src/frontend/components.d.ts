@@ -13,6 +13,7 @@ declare module 'vue' {
     AssessmentCard: typeof import('./src/components/cards/AssessmentCard.vue')['default']
     CalendarWidget: typeof import('./src/components/dashboard/CalendarWidget.vue')['default']
     CourseCard: typeof import('./src/components/cards/CourseCard.vue')['default']
+    DeleteCourseModal: typeof import('./src/components/modals/DeleteCourseModal.vue')['default']
     DeleteTaskModal: typeof import('./src/components/modals/DeleteTaskModal.vue')['default']
     EditTaskModal: typeof import('./src/components/modals/EditTaskModal.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']

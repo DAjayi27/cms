@@ -47,4 +47,9 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) { repo.deleteById(id); }
+
+    @DeleteMapping("/course/{id}")
+    public void deleteTasKByCourseId(@PathVariable long id) {
+        repo.deleteByCourseId(id);
+    }
 }

@@ -6,6 +6,8 @@ import type {Course} from "@/utils/interfaces.ts";
 import AddCourseModal from "@/components/modals/AddCourseModal.vue";
 import {toTitle} from "../utils/functions.ts";
 import type {CourseStatus, Term} from "@/utils/utils.ts";
+import DeleteCourseModal from "@/components/modals/DeleteCourseModal.vue";
+import {defaultCourse, defaultTask} from "@/utils/defaults.ts";
 
 
 let list = ref<Course[]>( []);
@@ -22,6 +24,7 @@ onMounted(async () => {
 const q = ref('')
 const courseStatus = ref<CourseStatus>('all')
 const term = ref<Term>('all')
+const showClosed = ref<boolean>(false);
 
 // Build term options from the data
 const termOptions = computed(() => {
@@ -30,13 +33,23 @@ const termOptions = computed(() => {
 })
 
 const filtered = computed<Course[]>(() => {
+
   const query = q.value.trim().toLowerCase()
-  return list.value.filter(c => {
+
+  let tempList = list.value.filter(c => {
     const matchesQuery = !query || c.title.toLowerCase().includes(query) || c.term.toLowerCase().includes(query)
     const matchesStatus = courseStatus.value === 'all' || c.status === courseStatus.value
     const matchesTerm = term.value === 'all' || c.term === term.value
     return matchesQuery && matchesStatus && matchesTerm
   })
+
+  if (!showClosed.value){
+
+    tempList = tempList.filter((val) => val.status !== 'closed');
+
+  }
+
+  return tempList;
 })
 
 
@@ -70,6 +83,18 @@ function addNewCourse(course:Course) {
   list.value.push(course);
 
 }
+
+function deleteCourse(course:Course) {
+
+  let courseIndex = list.value.findIndex((val) => val.id === course.id);
+
+  if (courseIndex !== -1 ){
+    list.value.splice(courseIndex,1);
+  }
+
+}
+
+const modalData =  ref<Course>(defaultCourse);
 
 
 </script>
@@ -110,6 +135,12 @@ function addNewCourse(course:Course) {
               <option v-for="t in termOptions" :key="t" :value="t">{{ toTitle(t) }}</option>
             </select>
           </div>
+          <div class="col-6 col-md-3 col-lg-2">
+            <div class="form-check mt-4">
+              <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off" v-model="showClosed">
+              <label class="btn btn-primary" for="btn-check">Show Closed</label>
+            </div>
+          </div>
           <div class="col-12 col-lg d-flex gap-2 justify-content-end mt-2 mt-lg-0">
             <button class="btn btn-outline-secondary" @click="q=''; courseStatus='all'; term='all'">Reset</button>
           </div>
@@ -137,9 +168,11 @@ function addNewCourse(course:Course) {
               :ended-at="c.endedAt"
               :img-src="c.imgSrc"
               :priority="c.priority"
+              @delete-course = "( course )=> {modalData = course} "
           />
         </RouterLink>
       </div>
+
     </div>
 
     <!-- Empty state -->
@@ -151,6 +184,8 @@ function addNewCourse(course:Course) {
 
 <!--  Add Course Modal-->
   <add-course-modal @add-course="addNewCourse"></add-course-modal>
+<!--  Delete Course Modal-->
+  <delete-course-modal :modal-data="modalData" @delete-course="deleteCourse"></delete-course-modal>
 </template>
 
 <style scoped>

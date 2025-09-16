@@ -62,4 +62,9 @@ public class CourseController {
         return repo.save(existing);      // <-- UPDATE
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteCourse(@PathVariable long id){
+        repo.deleteById(id);
+    }
+
 }

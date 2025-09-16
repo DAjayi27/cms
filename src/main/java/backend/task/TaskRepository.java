@@ -72,7 +72,5 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
         """)
     List<TaskWithCourse> findWithCourse(@Param("courseId") Long courseId);
 
-
-
-
+    void deleteByCourseId(Long courseId);
 }

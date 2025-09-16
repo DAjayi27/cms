@@ -4,17 +4,37 @@ import CourseCard from '@/components/cards/CourseCard.vue'
 import StatsCard from "@/components/dashboard/StatsCard.vue";
 import CalendarWidget from "@/components/dashboard/CalendarWidget.vue";
 import UpcomingAssessments from "@/components/dashboard/UpcomingAssessments.vue";
-import type {Course} from "@/utils/interfaces.ts";
+import type {Course, Task} from "@/utils/interfaces.ts";
 import {fetchData} from "@/utils/fetch.ts";
+import AddTaskModal from "@/components/modals/AddTaskModal.vue";
+import AddCourseModal from "@/components/modals/AddCourseModal.vue";
 
 // Keep data minimal so everything fits without scrolling
 const userName = 'Daniel'
 
 const courses = ref<Course[]>([])
+const tasks = ref<Task[]>([]);
 
 onMounted(async () => {
 
   courses.value = await getApiData();
+
+  try {
+    let res = await fetchData('api/tasks/active','GET');
+
+    let data:Task[] = await res.json();
+
+    data.sort( (a, b) => {
+      const ta = new Date(a.due).getTime();
+      const tb = new Date(b.due).getTime();
+      return (ta - tb);
+    })
+
+    tasks.value = data;
+  }
+  catch (e) {
+
+  }
 
 });
 
@@ -60,8 +80,8 @@ async function getApiData(  ):Promise<Course[]> {
         <small class="text-body-secondary">No-scroll dashboard layout</small>
       </div>
       <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary btn-sm" @click="onAddCourse">+ Course</button>
-        <button class="btn btn-primary btn-sm" @click="onAddTask">+ Task</button>
+        <button class="btn btn-outline-secondary btn-sm" data-bs-target="#createCourseModal" data-bs-toggle="modal">+ Course</button>
+        <button class="btn btn-primary btn-sm" data-bs-target="#addTaskModal" data-bs-toggle="modal">+ Task</button>
       </div>
     </div>
 
@@ -83,7 +103,7 @@ async function getApiData(  ):Promise<Course[]> {
       <!-- Deadlines + Calendar (compact) -->
       <div class="row g-3 align-items-stretch">
         <div class="col-12 col-lg-8" >
-          <upcoming-assessments></upcoming-assessments>
+          <upcoming-assessments :tasks="tasks"></upcoming-assessments>
         </div>
         <div class="col-12 col-lg-4">
           <calendar-widget/>
@@ -116,6 +136,13 @@ async function getApiData(  ):Promise<Course[]> {
       </div>
     </div>
   </div>
+
+
+<!--  Modals-->
+  <add-task-modal @add-task="(val) => {tasks.push(val)} "></add-task-modal>
+  <add-course-modal @add-course="(val) => {courses.push(val)}"></add-course-modal>
+
+
 </template>
 
 <style scoped>

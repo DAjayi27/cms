@@ -100,6 +100,7 @@ const sortDirection = ref<Direction>('asc')
 
 const filterOption = ref<FilterOptions>('none')
 const filterValue = ref<FilterValue>('all');
+const showCompleted = ref<boolean>(false);
 
 onBeforeMount(async () => {
 
@@ -112,7 +113,8 @@ onBeforeMount(async () => {
 
  const sortedTasks = computed<Task[]>(()=>{
 
-   let tempTasks : Task[] = fetched.value; //@TODO (change this when db data gets added)
+   let tempTasks : Task[] = fetched.value;
+
 
    if (searchQuery){
      tempTasks = filterTasksByQuery(searchQuery.value , tempTasks);
@@ -124,6 +126,11 @@ onBeforeMount(async () => {
 
    if (filterOption.value){
      tempTasks = filterTasksByOption(filterOption.value,filterValue.value,tempTasks)
+   }
+
+
+   if (!showCompleted.value){
+     tempTasks = tempTasks.filter((val) =>  val.status !== 'completed' )
    }
 
    return tempTasks
@@ -244,6 +251,12 @@ async function deleteTask(taskData:Task) {
             <select id="sortDir" v-model="filterValue" class="form-select">
               <option :value="opt" v-for=" opt in filterOptionVals" >{{toTitle(opt)}}</option>
             </select>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2">
+            <div class="form-check mt-4">
+              <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off" v-model="showCompleted">
+              <label class="btn btn-primary" for="btn-check">Show Completed</label>
+            </div>
           </div>
           <div class="col-12 col-md d-flex justify-content-end mt-2 mt-md-0">
             <button class="btn btn-outline-secondary" @click="resetFilterAndSort">Reset</button>
