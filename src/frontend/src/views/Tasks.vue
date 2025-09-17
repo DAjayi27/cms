@@ -271,7 +271,7 @@ async function deleteTask(taskData:Task) {
       <div class="card-body p-0">
         <div class="table-responsive">
           <table class="table align-middle mb-0">
-            <thead class="table-light">
+            <thead class="table">
             <tr>
               <th scope="col">
                 <button class="btn btn-link p-0 text-decoration-none" @click="setSort('name')">Task {{ arrowFor('name') }}</button>

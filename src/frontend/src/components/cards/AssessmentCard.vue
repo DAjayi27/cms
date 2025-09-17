@@ -68,14 +68,10 @@ function generateGradient():string {
 <style scoped>
 
 
-*{
-  font-family: Inter;
-}
-
 p{
   color:#A5B4CB ;
 }
 
-.mini-task { background: #fff; border-radius: .5rem; box-shadow: var(--bs-box-shadow-sm); padding: .5rem .5rem; color: black }
+.mini-task {border-radius: .5rem; box-shadow: var(--bs-box-shadow-sm); padding: .5rem .5rem;}
 .mini-task-icon { width: 42px; height: 42px; border-radius: .5rem; }
 </style>

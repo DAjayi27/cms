@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue'
 import CourseCard from '@/components/cards/CourseCard.vue'
-import {fetchData} from "@/utils/fetch.ts";
+import {fetchData, getActiveCourseData} from "@/utils/fetch.ts";
 import type {Course} from "@/utils/interfaces.ts";
 import AddCourseModal from "@/components/modals/AddCourseModal.vue";
 import {toTitle} from "../utils/functions.ts";
@@ -15,7 +15,7 @@ let list = ref<Course[]>( []);
 
 onMounted(async () => {
 
-  list.value = await getApiData();
+  list.value = await getActiveCourseData();
 
 })
 
@@ -53,30 +53,7 @@ const filtered = computed<Course[]>(() => {
 })
 
 
-async function getApiData(  ):Promise<Course[]> {
 
-  let res;
-
-  try {
-    res = await fetchData('/api/courses','GET');
-
-    let data:Course[] = await res.json();
-
-    data.forEach((value) => {
-
-      value.imgSrc = 'https://picsum.photos/id/22/640/320';
-
-    });
-
-    return data;
-
-  }
-  catch (e) {
-    console.error('error loading data');
-  }
-
-  return [];
-}
 
 function addNewCourse(course:Course) {
 
@@ -104,7 +81,7 @@ const modalData =  ref<Course>(defaultCourse);
     <!-- Header -->
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 mb-sm-4">
       <div>
-        <h1 class="h4 mb-1 text-primary">Courses</h1>
+        <h1 class="h4 mb-1">Courses</h1>
         <p class="text-body-secondary mb-0">Browse and manage your enrolled courses.</p>
       </div>
       <div>

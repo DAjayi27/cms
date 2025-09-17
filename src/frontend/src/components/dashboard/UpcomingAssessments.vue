@@ -106,7 +106,7 @@ async function editTask(saveData:Task) {
         <h2 class="h6 mb-0">Upcoming Deadlines</h2>
         <!-- Dropdown -->
         <div class="dropdown">
-          <button class="btn btn-light rounded-pill dropdown-toggle px-3" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn btn-primary rounded-pill dropdown-toggle px-3" data-bs-toggle="dropdown" aria-expanded="false">
             {{selectedOption}}
           </button>
           <ul class="dropdown-menu dropdown-menu-end" >

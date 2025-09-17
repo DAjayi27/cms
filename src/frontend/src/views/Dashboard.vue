@@ -5,7 +5,7 @@ import StatsCard from "@/components/dashboard/StatsCard.vue";
 import CalendarWidget from "@/components/dashboard/CalendarWidget.vue";
 import UpcomingAssessments from "@/components/dashboard/UpcomingAssessments.vue";
 import type {Course, Task} from "@/utils/interfaces.ts";
-import {fetchData} from "@/utils/fetch.ts";
+import {fetchData, getActiveCourseData} from "@/utils/fetch.ts";
 import AddTaskModal from "@/components/modals/AddTaskModal.vue";
 import AddCourseModal from "@/components/modals/AddCourseModal.vue";
 
@@ -17,7 +17,7 @@ const tasks = ref<Task[]>([]);
 
 onMounted(async () => {
 
-  courses.value = await getApiData();
+  courses.value = await getActiveCourseData();
 
   try {
     let res = await fetchData('api/tasks/active','GET');
@@ -43,44 +43,19 @@ const coursesTop = computed(() => courses?.value.slice(0, 3))
 function onAddTask() {}
 function onAddCourse() {}
 
-async function getApiData(  ):Promise<Course[]> {
-
-  let res;
-
-  try {
-    res = await fetchData('/api/courses/active','GET');
-
-    let activeCourses:Course[] = await res.json();
-
-    activeCourses.forEach((value) => {
-
-      value.imgSrc = 'https://picsum.photos/id/22/640/320';
-
-    });
-
-
-    return activeCourses;
-
-  }
-  catch (e) {
-    console.error('error loading data');
-  }
-
-  return [];
-}
 </script>
 
 <template>
   <!-- Fit the screen under the navbar: parent layout should set main area to flex-grow-1 -->
-  <div class="dashboard container-fluid d-flex flex-column h-100 overflow-hidden px-3 px-sm-4 py-3">
+  <div class="dashboard container-fluid d-flex flex-column h-100 overflow-hidden px-3 px-sm-4 py-3 ">
     <!-- Header (compact) -->
     <div class="d-flex justify-content-between align-items-center mb-2">
       <div>
-        <h1 class="h5 mb-0 text-primary">Hi {{ userName }}, quick overview</h1>
+        <h1 class="h5 mb-0 ">Hi {{ userName }}, quick overview</h1>
         <small class="text-body-secondary">No-scroll dashboard layout</small>
       </div>
       <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary btn-sm" data-bs-target="#createCourseModal" data-bs-toggle="modal">+ Course</button>
+        <button class="btn btn-outline-success btn-sm" data-bs-target="#createCourseModal" data-bs-toggle="modal">+ Course</button>
         <button class="btn btn-primary btn-sm" data-bs-target="#addTaskModal" data-bs-toggle="modal">+ Task</button>
       </div>
     </div>
