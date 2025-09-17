@@ -21,6 +21,9 @@ import router from './router'
 
 import './assets/main.css'
 
+import { useThemeStore } from '@/stores/theme'
+
+
 
 const app = createApp(App)
 
@@ -34,3 +37,5 @@ app.use(router)
 app.directive('b-color-mode', vBColorMode)
 
 app.mount('#app')
+
+useThemeStore().init()

@@ -28,6 +28,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     StatsCard: typeof import('./src/components/dashboard/StatsCard.vue')['default']
     TableRows: typeof import('./src/components/table/TableRows.vue')['default']
+    ThemeToggle: typeof import('./src/components/ThemeToggle.vue')['default']
     UpcomingAssessments: typeof import('./src/components/dashboard/UpcomingAssessments.vue')['default']
   }
   export interface GlobalDirectives {
