@@ -93,7 +93,7 @@ function onAddCourse() {}
             <router-link :to="{name:'courses'}" class="text-decoration-none small">View all</router-link>
           </div>
           <div class="row g-1 course-card-compact" style="flex: 1 1 auto;">
-            <div class="col" v-for="c in coursesTop" :key="c.id">
+            <div class="col-4" v-for="c in coursesTop" :key="c.id">
               <CourseCard
                   :id ="c.id"
                   :priority ="c.priority"

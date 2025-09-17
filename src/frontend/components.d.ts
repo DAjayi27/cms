@@ -31,7 +31,4 @@ declare module 'vue' {
     ThemeToggle: typeof import('./src/components/ThemeToggle.vue')['default']
     UpcomingAssessments: typeof import('./src/components/dashboard/UpcomingAssessments.vue')['default']
   }
-  export interface GlobalDirectives {
-    vBColorMode: typeof import('bootstrap-vue-next/directives/BColorMode')['vBColorMode']
-  }
 }
