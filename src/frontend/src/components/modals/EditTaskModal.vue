@@ -2,6 +2,7 @@
 import {onBeforeMount, ref, toRef, watch} from 'vue'
 import type {Course, Task} from "@/utils/interfaces.ts";
 import {fetchData} from "@/utils/fetch.ts";
+import {defaultTask} from "@/utils/defaults.ts";
 
 
 
@@ -14,20 +15,11 @@ const emit = defineEmits<{
 const activeCourses = ref<Course[]>([]);
 
 // Local form (safe defaults so nothing is undefined)
-const form = ref<Task>({
-  id:undefined,
-  name: '',
-  courseName: '',
-  courseTitle: '',
-  due: '',
-  courseId: undefined,
-  priority: 'medium',
-  status: 'not_started' ,
-})
+const form = ref<Task>(defaultTask)
 
 const modalDataRef = toRef(props, 'modalData')
 
-// ✅ Sync from prop now and whenever modalData changes
+
 watch(modalDataRef,
   (m) => { if (m) form.value = { ...form.value, ...m } },
   { immediate: true, deep: true }
@@ -35,7 +27,7 @@ watch(modalDataRef,
 
 async function onSave() {
 
-  let res = await fetchData(`api/tasks/${form.value.id}`,'PUT',form.value);
+  let res = await fetchData(`/api/tasks/${form.value.id}`,'PUT',form.value);
 
   let updatedData:Task = await res.json()
 
@@ -110,7 +102,7 @@ onBeforeMount(async ()=>{
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="emit('cancel')">Cancel</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="onSave">Save changes</button>
+          <button type="button" class="btn btn-primary" @click="onSave">Save changes</button>
         </div>
       </div>
     </div>

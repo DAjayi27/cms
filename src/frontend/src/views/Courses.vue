@@ -8,6 +8,7 @@ import {toTitle} from "../utils/functions.ts";
 import type {CourseStatus, Term} from "@/utils/utils.ts";
 import DeleteCourseModal from "@/components/modals/DeleteCourseModal.vue";
 import {defaultCourse, defaultTask} from "@/utils/defaults.ts";
+import EditCourseModal from "@/components/modals/EditCourseModal.vue";
 
 
 let list = ref<Course[]>( []);
@@ -69,6 +70,19 @@ function deleteCourse(course:Course) {
     list.value.splice(courseIndex,1);
   }
 
+}
+
+
+function editCourse(courseData:Course) {
+
+  let index =  list.value.findIndex((course) =>  course.id === courseData.id  )
+
+  debugger;
+
+  if (index != -1){
+    list.value.splice(index,1,courseData);
+  }
+  
 }
 
 const modalData =  ref<Course>(defaultCourse);
@@ -146,6 +160,7 @@ const modalData =  ref<Course>(defaultCourse);
               :img-src="c.imgSrc"
               :priority="c.priority"
               @delete-course = "( course )=> {modalData = course} "
+              @edit-course  = "( course )=> {modalData = course} "
           />
         </RouterLink>
       </div>
@@ -163,6 +178,8 @@ const modalData =  ref<Course>(defaultCourse);
   <add-course-modal @add-course="addNewCourse"></add-course-modal>
 <!--  Delete Course Modal-->
   <delete-course-modal :modal-data="modalData" @delete-course="deleteCourse"></delete-course-modal>
+<!--  Edit Course Modal-->
+  <edit-course-modal :modal-data="modalData" @edit-course="editCourse" ></edit-course-modal>
 </template>
 
 <style scoped>

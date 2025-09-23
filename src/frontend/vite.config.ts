@@ -22,7 +22,7 @@ export default defineConfig({
   server: {
     port: 8000,
     proxy: {
-      '/api': {
+      '^/api': {
         target: 'http://localhost:8100', // your Spring Boot port
         changeOrigin: true,
         // If your backend already serves routes with the /api prefix, keep rewrite commented.

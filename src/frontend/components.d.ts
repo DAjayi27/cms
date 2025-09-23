@@ -15,6 +15,7 @@ declare module 'vue' {
     CourseCard: typeof import('./src/components/cards/CourseCard.vue')['default']
     DeleteCourseModal: typeof import('./src/components/modals/DeleteCourseModal.vue')['default']
     DeleteTaskModal: typeof import('./src/components/modals/DeleteTaskModal.vue')['default']
+    EditCourseModal: typeof import('./src/components/modals/EditCourseModal.vue')['default']
     EditTaskModal: typeof import('./src/components/modals/EditTaskModal.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
