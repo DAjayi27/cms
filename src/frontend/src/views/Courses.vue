@@ -148,7 +148,7 @@ const modalData =  ref<Course>(defaultCourse);
     <div class="row g-3">
       <div v-for="c in filtered" :key="c.id" class="col-12 col-md-6 col-lg-4">
         <!-- Wrap in RouterLink if you have a course detail route -->
-        <RouterLink class="text-reset text-decoration-none" :to="{ name: 'course', params: { id: c.id } }">
+        <div class="text-reset text-decoration-none" >
           <CourseCard
               :id = "c.id"
               :status="c.status"
@@ -162,7 +162,7 @@ const modalData =  ref<Course>(defaultCourse);
               @delete-course = "( course )=> {modalData = course} "
               @edit-course  = "( course )=> {modalData = course} "
           />
-        </RouterLink>
+        </div>
       </div>
 
     </div>

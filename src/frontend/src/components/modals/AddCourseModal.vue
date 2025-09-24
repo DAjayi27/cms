@@ -60,6 +60,7 @@ async function onAddCourse() {
       modal.hide()
       modal.dispose();
       document.querySelector('.modal-backdrop')?.remove();
+      document.querySelector('.modal-backdrop')?.remove();
     }
 
   }

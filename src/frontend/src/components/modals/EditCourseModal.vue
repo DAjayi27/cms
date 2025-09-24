@@ -53,7 +53,8 @@ async function onSave() {
 
     if (modal){
       modal.hide()
-      modal.dispose();
+      modal.dispose(); //Attempted Bug Fix
+      document.querySelector('.modal-backdrop')?.remove();
       document.querySelector('.modal-backdrop')?.remove();
     }
 
