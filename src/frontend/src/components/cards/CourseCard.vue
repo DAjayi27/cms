@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<Course>(), {
 })
 
 
-const emits = defineEmits<{ (e: 'cancel'): void; (e: 'deleteCourse', value: Course): void }>();
+const emits = defineEmits<{ (e: 'cancel'): void; (e: 'deleteCourse', value: Course): void  , (e: 'editCourse', value: Course): void }>();
 
 
 </script>
@@ -22,7 +22,7 @@ const emits = defineEmits<{ (e: 'cancel'): void; (e: 'deleteCourse', value: Cour
   <div class="card border-0 bg-body-secondary h-100" style="border-radius: .75rem; overflow: hidden;">
     <!-- Image -->
     <div class="position-relative">
-      <img v-if="props.imgSrc" :src="props.imgSrc" class="card-img-top" alt="Course image" />
+      <img v-if="props.imgSrc" :src="props.imgSrc" class="card-img-top" alt="Course image" style="height: 120px;" />
       <div v-else class="bg-light d-flex align-items-center justify-content-center" style="height: 120px;">
         <span class="text-muted">No Image</span>
       </div>
@@ -53,7 +53,8 @@ const emits = defineEmits<{ (e: 'cancel'): void; (e: 'deleteCourse', value: Cour
       <!-- End Date -->
       <small v-if="props.endedAt" class="text-muted">Ended {{ props.endedAt }}</small>
 
-      <div class="d-flex justify-content-end mt-2">
+      <div class="d-flex  btn-group">
+        <button class="btn btn-outline-secondary" data-bs-target="#editCourseModal" data-bs-toggle="modal" @click="$emit('editCourse',props)">Edit</button>
         <button type="button" class="btn btn-outline-danger btn-sm" data-bs-target="#deleteCourseModal"
                 data-bs-toggle ="modal" @click="$emit('deleteCourse',props)"
         >

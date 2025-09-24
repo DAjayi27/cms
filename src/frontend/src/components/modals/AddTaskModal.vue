@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {ref, watch, toRef, onBeforeMount, useTemplateRef} from 'vue'
+import {ref, watch, toRef, onBeforeMount, useTemplateRef, onUnmounted} from 'vue'
 import type { Priority, TaskStatus } from '@/utils/utils.ts'
 import type {Course, Task} from '@/utils/interfaces.ts'
 import {fetchData} from "@/utils/fetch.ts";
+import Modal from 'bootstrap/js/dist/modal'
 
 // Optional prefill values (e.g., when adding from a specific course)
 const props = defineProps<{ prefill?: Partial<Task> }>()
@@ -30,6 +31,7 @@ const formElement = useTemplateRef('form-element');
 
 // Hydrate from prefill when provided
 const prefillRef = toRef(props, 'prefill')
+
 watch(prefillRef, (p) => {
   if (!p) return
   form.value = { ...form.value, ...p, modalTarget: '#addTaskModal' } as Task
@@ -37,31 +39,28 @@ watch(prefillRef, (p) => {
 
 async function onAddTask() {
 
-  const modalElement =  document.getElementById('addTaskModal')
+  const modalEl:any = document.querySelector('#addTaskModal');
+  const modal = Modal.getInstance(modalEl);
 
   const formEl = formElement.value
-  if (!formEl || !modalElement) return
+  if (!formEl || !modalEl) return
 
   // Show Bootstrap validation UI right away
   formEl.classList.add('was-validated')
 
-  if (!formEl.checkValidity()) {
-    // Focus the first invalid control for better UX
-    formEl.querySelector<HTMLElement>(':invalid')?.focus()
-    return
+  if (formEl.checkValidity()) {
+    let res = await fetchData('/api/tasks','POST',form.value);
+    let data = await res.json();
+    emit('addTask', data)
+
+    if (!createOtherTasks.value && modal){
+      modal.hide()
+      modal.dispose();
+      document.querySelector('.modal-backdrop')?.remove();
+    }
+
   }
 
-  let res = await fetchData('/api/tasks','POST',form.value);
-
-  let data = await res.json();
-
-
-  // Emit a copy (avoid mutating upstream refs)
-  emit('addTask', data)
-
-  // Clear fields (or formEl.reset() if you prefer)
-  form.value.name = ''
-  form.value.courseId = undefined
 }
 
 
@@ -70,6 +69,20 @@ onBeforeMount(async ()=>{
   activeCourses.value = await res.json();
 })
 
+
+
+
+const createOtherTasks = ref<boolean>(false)
+
+document.addEventListener('hidden.bs.modal',()=>{
+
+  form.value.name = ''
+  form.value.courseId = undefined;
+  form.value.due = '';
+
+  // Show Bootstrap validation UI right away
+  formElement.value?.classList.remove('was-validated')
+})
 
 </script>
 
@@ -130,8 +143,14 @@ onBeforeMount(async ()=>{
         </div>
 
         <div class="modal-footer">
+          <div class="form-check me-auto">
+            <input class="form-check-input" type="checkbox" value="" id="checkDefault" v-model="createOtherTasks">
+            <label class="form-check-label" for="checkDefault">
+              Create Other Tasks
+            </label>
+          </div>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="emit('cancel')">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="onAddTask">Add task</button>
+          <button type="button" class="btn btn-primary"  @click="onAddTask">Add task</button>
         </div>
       </div>
     </div>

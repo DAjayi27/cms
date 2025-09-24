@@ -6,7 +6,6 @@ export type Theme = 'light' | 'dark' | 'system'
 
 function applyTheme(mode: Theme) {
     const el = document.documentElement
-    debugger;
     if (mode === 'system') {
         const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches
         el.setAttribute('data-bs-theme', prefersDark ? 'dark' : 'light')
